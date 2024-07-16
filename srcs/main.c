@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:13:27 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/16 09:42:55 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/16 12:52:26 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,15 @@ void* image_creation(t_game* game, t_tile* new_tile)
 	t_image	new_image;
 	int		bytes_per_pixel;
 
+	printf("and now mlx pointer is %p\n", game->mlx_connection);
+	write(1, "testbrasil\n", 12);
 	new_image.image = mlx_new_image(game->mlx_connection, TILE_WIDTH, TILE_HEIGHT);
+	write(1, "testuepa\n", 9);
 	if (!new_image.image)
+	{
+		write(1, "biridim\n", 9);
 		close_game_failure(game, NULL);
+	}
 	new_image.address = mlx_get_data_addr(new_image.image, &new_image.bits_per_pixel, &new_image.line_lenght, &new_image.endian);
 	if (!new_image.address)
 		close_game_failure(game, new_image.image);
@@ -62,48 +68,58 @@ void* image_creation(t_game* game, t_tile* new_tile)
 	return (new_image.image);
 }
 
-t_tile	tile_creation(t_game* game, int x, int y)
+t_tile*	tile_creation(t_game* game, int x, int y, t_tile*** grid)
 {
 	t_tile*		new_tile;
-	// t_player	player;
+	t_player	player;
 
 	new_tile = malloc(sizeof(t_tile));
-	new_tile->x_grid = x + 1;
-	new_tile->y_grid = y + 1;
+	new_tile->x_grid = x;
+	new_tile->y_grid = y;
 
-	if (new_tile->x_grid == 1 && new_tile->y_grid == 1)
+	if (new_tile->x_grid == 0 && new_tile->y_grid == 0)
 	{
-		// player.tile = &new_tile;
 		new_tile->type = 'P';
+		// player.tile = new_tile;
+		game->player.tile = new_tile;
 	}
 	else
 		new_tile->type = '0';
+
+	if (x < (game->width_tile_size - 1))
+		new_tile->right_tile = grid[y][x + 1];
+	if (x > 0)
+		new_tile->left_tile = grid[y][x - 1];
+	if (y > 0)
+		new_tile->up_tile = grid[y - 1][x];
+	if (y < (game->height_tile_size - 1))
+		new_tile->down_tile = grid[y + 1][x];
+
 	new_tile->image = image_creation(game, new_tile);
 	mlx_put_image_to_window(game->mlx_connection, game->window, new_tile->image, x * TILE_WIDTH, y * TILE_HEIGHT);
-	return (*new_tile);
+	return (new_tile);
 }
 
-t_tile** grid_allocation(t_game* game, t_tile** grid)
+t_tile*** grid_allocation(t_game* game)
 {
-	int y;
+	int		y;
 
-	grid = malloc(sizeof(t_tile*) * (game->height_tile_size));
+	game->grid = malloc(sizeof(t_tile*) * (game->height_tile_size));
 	y = 0;
 	while (y < game->height_tile_size)
 	{
-		grid[y] = malloc(sizeof(t_tile*) * (game->width_tile_size));
+		game->grid[y] = malloc(sizeof(t_tile*) * (game->width_tile_size));
 		y++;
 	}
-	return (grid);
+	return (game->grid);
 }
 
-void grid_creation(t_game* game)
+void tile_coordinates(t_game* game)
 {
-	t_tile	**grid;
+	t_tile*	tmp;
 	int		x;
 	int		y;
 
-	grid = grid_allocation(game, grid);
 	x = 0;
 	y = 0;
 	while (y < game->height_tile_size)
@@ -111,11 +127,41 @@ void grid_creation(t_game* game)
 		x = 0;
 		while (x < game->width_tile_size)
 		{
-			grid[y][x] = tile_creation(game, x, y);
+			tmp = game->grid[y][x];
+			if (x < (game->width_tile_size - 1))
+				tmp->right_tile = game->grid[y][x + 1];
+			if (x > 0)
+				tmp->left_tile = game->grid[y][x - 1];
+			if (y > 0)
+				tmp->up_tile = game->grid[y - 1][x];
+			if (y < (game->height_tile_size - 1))
+				tmp->down_tile = game->grid[y + 1][x];
 			x++;
 		}
 		y++;
 	}
+}
+
+void grid_creation(t_game* game)
+{
+	int		x;
+	int		y;
+
+	game->grid = grid_allocation(game);
+	x = 0;
+	y = 0;
+	while (y < game->height_tile_size)
+	{
+		x = 0;
+		while (x < game->width_tile_size)
+		{
+			// write(1, "brasil\n", 8);
+			game->grid[y][x] = tile_creation(game, x, y, game->grid);
+			x++;
+		}
+		y++;
+	}
+	tile_coordinates(game);
 }
 
 int	main (int argc, char **argv)
@@ -136,7 +182,7 @@ int	main (int argc, char **argv)
 	if (!game.window)
 		close_game_failure(&game, NULL);
 	grid_creation(&game);
-	// mlx_key_hook(game.window, key_press, &game);
+	mlx_key_hook(game.window, key_press, &game);
 	mlx_loop(game.mlx_connection);
 }
 
