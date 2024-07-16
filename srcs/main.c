@@ -6,263 +6,182 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:13:27 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/12 17:59:07 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/16 09:42:55 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-// int main(int argc, char **argv)
-// {
-// 	void*	mlx_start;
-// 	void*	mlx_window;
-
-// 	//Create protection for appropriate number of files + againt NULL argv or NULL argv[0]
-// 	mlx_start = mlx_init();
-// 	if (!mlx_start)
-// 		return (EXIT_FAILURE);
-// 	mlx_window = mlx_new_window(mlx_start, 600, 400, "Custom Pac-Man");
-// 	if (!mlx_window)
-// 		return (EXIT_FAILURE);
-// 	sleep(5);
-// 	return (EXIT_SUCCESS);
-// }
-
-// typedef struct	s_data {
-// 	void	*img; //A pointer to the image
-// 	char	*addr;
-// 	int		bits_per_pixel;
-// 	int		line_length;
-// 	int		endian;
-// }				t_data;
-
-// void	my_mlx_pixel_put(t_data *new_img, int x, int y, int color) //void function, does not return anything, only inser the pixels and etc.
-// {
-// 	char	*dst;
-
-// 	dst = NULL;
-// 	printf("\n\nNow, let's analyze the my_mlx_pixel_put function\n", dst);
-// 	printf("Dst is %p\n", dst);
-// 	printf("X is %i\n", x);
-// 	printf("Y is %i\n", y);
-// 	printf("Color is %i\n", color);
-// 	printf("And about out current image struct\n");
-// 	printf("Image pointer is %p\n", new_img->img);
-// 	printf("Address pointer is  %p\n", new_img->addr);
-// 	printf("Bits per pixel is %i\n", new_img->bits_per_pixel);
-// 	printf("Line lenght is %i\n", new_img->line_length);
-// 	printf("Endian is %i\n", new_img->endian);
-
-// 	printf("\n\nApplying changes...\n");
-// 	dst = new_img->addr;
-// 	printf("Dst is %p\n", dst);
-// 	printf("X is %i\n", x);
-// 	printf("Y is %i\n", y);
-// 	printf("Color is %i\n", color);
-// 	printf("And about out current image struct\n");
-// 	printf("Image pointer is %p\n", new_img->img);
-// 	printf("Address pointer is  %p\n", new_img->addr);
-// 	printf("Bits per pixel is %i\n", new_img->bits_per_pixel);
-// 	printf("Line lenght is %i\n", new_img->line_length);
-// 	printf("Endian is %i\n", new_img->endian);
-
-// 	printf("\n\nAdding y axis...\n");
-// 	dst += (y * new_img->line_length);
-// 	printf("\n\nDst is %p\n", dst);
-// 	printf("X is %i\n", x);
-// 	printf("Y is %i\n", y);
-// 	printf("Color is %i\n", color);
-// 	printf("And about out current image struct\n");
-// 	printf("Image pointer is %p\n", new_img->img);
-// 	printf("Address pointer is  %p\n", new_img->addr);
-// 	printf("Bits per pixel is %i\n", new_img->bits_per_pixel);
-// 	printf("Line lenght is %i\n", new_img->line_length);
-// 	printf("Endian is %i\n", new_img->endian);
-
-// 	dst += (x * (new_img->bits_per_pixel / 8)); 
-// 	printf("\n\nDst is %p\n", dst);
-// 	printf("X is %i\n", x);
-// 	printf("Y is %i\n", y);
-// 	printf("Color is %i\n", color);
-// 	printf("And about out current image struct\n");
-// 	printf("Image pointer is %p\n", new_img->img);
-// 	printf("Address pointer is  %p\n", new_img->addr);
-// 	printf("Bits per pixel is %i\n", new_img->bits_per_pixel);
-// 	printf("Line lenght is %i\n", new_img->line_length);
-// 	printf("Endian is %i\n", new_img->endian);
-
-
-// 	*(unsigned int*)dst = color;
-
-// 	printf("\n\nDst is %p\n", dst);
-// 	printf("X is %i\n", x);
-// 	printf("Y is %i\n", y);
-// 	printf("Color is %i\n", color);
-// 	printf("And about out current image struct\n");
-// 	printf("Image pointer is %p\n", new_img->img);
-// 	printf("Address pointer is  %p\n", new_img->addr);
-// 	printf("Bits per pixel is %i\n", new_img->bits_per_pixel);
-// 	printf("Line lenght is %i\n", new_img->line_length);
-// 	printf("Endian is %i\n", new_img->endian);
-
-// }
-
-// int	main(void)
-// {
-// 	void	*mlx;
-// 	void	*mlx_win;
-// 	t_data	new_img;
-
-// 	new_img.img = NULL;
-// 	new_img.addr = NULL;
-
-// 	mlx = mlx_init(); //ok, começa a conexão
-// 	mlx_win = mlx_new_window(mlx, 600, 400, "Hello world!"); //ok, abre a janela
-
-// 	printf("\nImage pointer is %p\n", new_img.img);
-// 	printf("Address pointer is  %p\n", new_img.addr);
-// 	printf("Bits per pixel is %i\n", new_img.bits_per_pixel);
-// 	printf("Line lenght is %i\n", new_img.line_length);
-// 	printf("Endian is %i\n", new_img.endian);
-
-// 	printf("\nNow we gonna call mlx_new_image\n");
-// 	new_img.img = mlx_new_image(mlx, 600, 400); //Inicia uma imagem de acordo com o tamanho especificado
-// 	printf("\nImage pointer is %p\n", new_img.img);
-// 	printf("Address pointer is  %p\n", new_img.addr);
-// 	printf("Bits per pixel is %i\n", new_img.bits_per_pixel);
-// 	printf("Line lenght is %i\n", new_img.line_length);
-// 	printf("Endian is %i\n", new_img.endian);
-// 	printf("\nNow we gonna call mlx_get_data_addr\n");
-// 	new_img.addr = mlx_get_data_addr(new_img.img, &new_img.bits_per_pixel, &new_img.line_length, &new_img.endian);
-// 	printf("\nImage pointer is %p\n", new_img.img);
-// 	printf("Address pointer is  %p\n", new_img.addr);
-// 	printf("Bits per pixel is %i\n", new_img.bits_per_pixel);
-// 	printf("Line lenght is %i\n", new_img.line_length);
-// 	printf("Endian is %i\n", new_img.endian);
-// 	my_mlx_pixel_put(&new_img, 5, 5, 0x00FF10F0);
-// 	// my_mlx_pixel_put(&new_img, 5, 5, 0xFFFFFFFFF);
-// 	// my_mlx_pixel_put(&new_img, 6, 6, 0x00FF0000);
-// 	mlx_put_image_to_window(mlx, mlx_win, new_img.img, 0, 0); //Insere a imagem. Precisa da conexão, janela, imagem e eixos x e y
-// 	sleep(6);
-// }
-
-///////////////////////////////
-
-typedef struct	s_data {
-	void	*img; //A pointer to the image
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-}				t_data;
-
-void	my_mlx_pixel_put(t_data *new_img, int x, int y, int color) //void function, does not return anything, only inser the pixels and etc.
+void	my_pixel_put(t_image* image, int x_axis, int y_axis, unsigned int color)
 {
-	char	*dst;
-	dst = NULL;
-	dst = new_img->addr;
-	dst += (y * new_img->line_length);
-	dst += (x * (new_img->bits_per_pixel / 8)); 
-	*(unsigned int*)dst = color;
+	char	*pixel;
+
+	pixel = NULL;
+	pixel = image->address;
+	pixel += y_axis * image->line_lenght; 
+	pixel += x_axis * image->bytes_per_pixel;
+	*(unsigned int *)pixel = color;
 }
 
-int	main(void)
+void pixel_fill(t_image* image, t_game* game, t_tile* new_tile)
 {
-	void	*mlx;
-	void	*mlx_win;
-	t_data	new_img;
-	int		width;
-	int		height;
-	int		test_width;
-	int		test_height;
-	t_data	second_img;
+	int				x_axis;
+	int				y_axis;
+	unsigned int	color;
 
-	new_img.img = NULL;
-	new_img.addr = NULL;
-
-	mlx = mlx_init(); //ok, começa a conexão
-	width = 600;
-	height = 400;
-	mlx_win = mlx_new_window(mlx, width, height, "Hello world!"); //ok, abre a janela
-	new_img.img = mlx_new_image(mlx, width, height); //Inicia uma imagem de acordo com o tamanho especificado
-	new_img.addr = mlx_get_data_addr(new_img.img, &new_img.bits_per_pixel, &new_img.line_length, &new_img.endian);
-	test_height = 0;
-	while (test_height < height)
+	if (new_tile->type == '0')
+		color = 0x00FFFFFF;
+	else if (new_tile->type == 'P')
+		color = 0x00FF0000;
+	y_axis = 0;
+	while (y_axis < TILE_HEIGHT)
 	{
-		test_width = 0;
-		while (test_width < width)
+		x_axis = 0;
+		while (x_axis < TILE_WIDTH)
 		{
-			my_mlx_pixel_put(&new_img, test_width, test_height, 0x00FFC0CB);
-			test_width++;
+			my_pixel_put(image, x_axis, y_axis, color);
+			x_axis++;
 		}
-		test_height++;
+		y_axis++;
 	}
-	mlx_put_image_to_window(mlx, mlx_win, new_img.img, 0, 0); //Insere a imagem. Precisa da conexão, janela, imagem e eixos x e y
-	sleep(3);
-	int test = 99;
-	test = mlx_destroy_image(mlx, new_img.img);
-	printf("%i\n", test);
-	second_img.img = mlx_new_image(mlx, width, height); //Inicia uma imagem de acordo com o tamanho especificado
-	second_img.addr = mlx_get_data_addr(second_img.img, &second_img.bits_per_pixel, &second_img.line_length, &second_img.endian);
-	test_height = 0;
-	while (test_height < height)
-	{
-		test_width = 0;
-		while (test_width < width)
-		{
-			my_mlx_pixel_put(&second_img, test_width, test_height, 0x00FF0000);
-			test_width++;
-		}
-		test_height++;
-	}
-	mlx_put_image_to_window(mlx, mlx_win, second_img.img, 0, 0); //Insere a imagem. Precisa da conexão, janela, imagem e eixos x e y
-	sleep(3);
-	mlx_put_image_to_window(mlx, mlx_win, new_img.img, 0, 0); //Insere a imagem. Precisa da conexão, janela, imagem e eixos x e y
-	sleep(3);
 }
 
-// #include <X11/keysym.h>
+void* image_creation(t_game* game, t_tile* new_tile)
+{
+	t_image	new_image;
+	int		bytes_per_pixel;
 
-// typedef struct s_vars {
-//     void *mlx;
-//     void *win;
-// } t_vars;
+	new_image.image = mlx_new_image(game->mlx_connection, TILE_WIDTH, TILE_HEIGHT);
+	if (!new_image.image)
+		close_game_failure(game, NULL);
+	new_image.address = mlx_get_data_addr(new_image.image, &new_image.bits_per_pixel, &new_image.line_lenght, &new_image.endian);
+	if (!new_image.address)
+		close_game_failure(game, new_image.image);
+	new_image.bytes_per_pixel = (new_image.bits_per_pixel / 8);
+	pixel_fill(&new_image, game, new_tile);
+	return (new_image.image);
+}
 
-// int handle_keypress(int keycode, t_vars *vars) {
-//     // Check if the ESC key was pressed
-//     if (keycode == XK_Escape) {
-//         mlx_destroy_window(vars->mlx, vars->win);
-//         exit(0); // Close the program
-//     }
-//     return (0);
-// }
+t_tile	tile_creation(t_game* game, int x, int y)
+{
+	t_tile*		new_tile;
+	// t_player	player;
 
-// int main(void) 
+	new_tile = malloc(sizeof(t_tile));
+	new_tile->x_grid = x + 1;
+	new_tile->y_grid = y + 1;
+
+	if (new_tile->x_grid == 1 && new_tile->y_grid == 1)
+	{
+		// player.tile = &new_tile;
+		new_tile->type = 'P';
+	}
+	else
+		new_tile->type = '0';
+	new_tile->image = image_creation(game, new_tile);
+	mlx_put_image_to_window(game->mlx_connection, game->window, new_tile->image, x * TILE_WIDTH, y * TILE_HEIGHT);
+	return (*new_tile);
+}
+
+t_tile** grid_allocation(t_game* game, t_tile** grid)
+{
+	int y;
+
+	grid = malloc(sizeof(t_tile*) * (game->height_tile_size));
+	y = 0;
+	while (y < game->height_tile_size)
+	{
+		grid[y] = malloc(sizeof(t_tile*) * (game->width_tile_size));
+		y++;
+	}
+	return (grid);
+}
+
+void grid_creation(t_game* game)
+{
+	t_tile	**grid;
+	int		x;
+	int		y;
+
+	grid = grid_allocation(game, grid);
+	x = 0;
+	y = 0;
+	while (y < game->height_tile_size)
+	{
+		x = 0;
+		while (x < game->width_tile_size)
+		{
+			grid[y][x] = tile_creation(game, x, y);
+			x++;
+		}
+		y++;
+	}
+}
+
+int	main (int argc, char **argv)
+{
+	//int	check_errors; map, argc, argv, etc.
+	t_game	game;
+
+	// if (argc != 2)
+	// 	return (EXIT_FAILURE);
+	game.mlx_connection = mlx_init();
+	if (!game.mlx_connection)
+		return (EXIT_FAILURE);
+	game.width_tile_size = 10;
+	game.height_tile_size = 10;
+	game.pixel_widht = (TILE_WIDTH * game.width_tile_size);
+	game.pixel_height = (TILE_HEIGHT * game.height_tile_size);
+	game.window = mlx_new_window(game.mlx_connection, game.pixel_widht, game.pixel_height, "Custom Pac-Man");
+	if (!game.window)
+		close_game_failure(&game, NULL);
+	grid_creation(&game);
+	// mlx_key_hook(game.window, key_press, &game);
+	mlx_loop(game.mlx_connection);
+}
+
+/*
+
+Objectives:
+1 - Initialize connection, window, etc.
+2 - Put some shit on screen
+3 - On ESC key, close program
+4 - 
+5 - 
+
+Backlog: 
+- Map and map structure
+- Player
+- Collectibles
+- Usar mlx_get_screen_size para entender melhor como estruturar a parada, sepa jogo do tamanho da tela?
+- mlx_hook(game.window, DestroyNotify, StructureNotifyMask, close_game_success, &game);
+- If game is too much big for the current screen, display error
+- Game file must be compatible with the map size. If map is 10 x 5, then stuff should be 10 x 64 (640) and 5 x 64 (320)
+
+*/
+
+/*
+
+// /* Allocates memory to save a tilemap with same size as <map> */
+// t_tile	**alloc_tilemap(char **map)
 // {
-//     t_vars vars;
+// 	t_tile	**tilemap;
+// 	int		i;
 
-//     vars.mlx = mlx_init();
-//     vars.win = mlx_new_window(vars.mlx, 600, 400, "Press ESC to close");
-
-//     // Set up key press event handler. THIS IS THE IMPORTANT PART.
-//     mlx_hook(vars.win, 2, 1L<<0, handle_keypress, &vars);
-
-//     mlx_loop(vars.mlx);
-// 	sleep(5);
-//     return (0);
-// }
-
-// #include <stddef.h>
-
-// static int cb() {
-//   return 0;
-// }
-
-// int main() {
-//   void *mlx = mlx_init();
-//   void *win = mlx_new_window(mlx, 800, 600, "Hello, world!");
-//   (void)win;
-//   mlx_loop_hook(mlx, cb, NULL);
-//   mlx_loop(mlx);
-//   return 0;
+// 	tilemap = malloc(sizeof(t_tile *) * ft_chartable_linecount(map) + 1);
+// 	if (tilemap == NULL)
+// 		return (NULL);
+// 	i = 0;
+// 	while (map[i] != NULL)
+// 	{
+// 		tilemap[i] = malloc(sizeof(t_tile) * ft_strlen(*map) + 1);
+// 		if (tilemap == NULL)
+// 		{
+// 			while (i > 0)
+// 				free(tilemap[--i]);
+// 			return (NULL);
+// 		}
+// 		i++;
+// 	}
+// 	return (tilemap);
 // }

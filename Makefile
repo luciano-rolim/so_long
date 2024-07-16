@@ -6,7 +6,7 @@
 #    By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/10 12:12:03 by lmeneghe          #+#    #+#              #
-#    Updated: 2024/07/11 14:11:57 by lmeneghe         ###   ########.fr        #
+#    Updated: 2024/07/15 16:13:44 by lmeneghe         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ MLX				= $(MLX_DIR)libmlx_Linux.a
 MLX_LIBS       = -L$(MLX_DIR) -lmlx_Linux -L/usr/lib -lXext -lX11 -lz -lm
 
 # Source Files
-SRC_FILES       = srcs/main.c
+SRC_FILES       = srcs/main.c srcs/utils.c
 
 # Object files
 OBJS_DIR        = objs/
