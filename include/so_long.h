@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:15:37 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/16 12:53:08 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:10:56 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 
 typedef struct s_image
 {
-	void*	image;
+	void*	image_ptr;
 	char*	address;
 	int		bits_per_pixel;
 	int		bytes_per_pixel;
@@ -44,15 +44,18 @@ typedef enum e_tile_type //Understand this shit better
 
 typedef struct s_tile
 {
-	t_image*			image;
+	t_image				*image;
 	int					x_grid;
 	int					y_grid;
 	t_tile_type			type;
-	struct s_tile		*right_tile; //Why s_tile instead of t_tile? I know it give errors, but why?
-	struct s_tile		*left_tile; //off topic anotar cena de grid*** porque os valores por si só são *t_tile
+	struct s_tile		*right_tile; 
+	struct s_tile		*left_tile;
 	struct s_tile		*up_tile;
 	struct s_tile		*down_tile;
 } t_tile;
+
+//Why s_tile instead of t_tile? I know it give errors, but why?
+//off topic anotar cena de grid*** porque os valores por si só são *t_tile
 
 typedef struct s_player
 {
@@ -61,14 +64,14 @@ typedef struct s_player
 
 typedef struct s_game
 {
-	void*			mlx_connection;
-	void*			window;
-	int				width_tile_size;
-	int				height_tile_size;
-	int				pixel_widht;
+	void			*mlx_ptr;
+	void			*window;
+	int				tile_width;
+	int				tile_height;
+	int				pixel_width;
 	int				pixel_height;
 	t_player		player; //review again why cant be a poiunter
-	t_tile***		grid //understand this shit better
+	t_tile			***grid; //understand this shit better
 } t_game;
 
 enum key_code //Understand this shit better
@@ -80,10 +83,17 @@ enum key_code //Understand this shit better
 	DOWN_KEY = XK_Down
 };
 
-int		close_game_failure(t_game *game, t_image* image);
-int		close_game_success(t_game *game);
+typedef enum
+{
+	CLOSE_SUCCESS,
+	CLOSE_FAILURE
+} close_status;
+
+int		close_game(char *message, t_game *game, close_status status);
 int		key_press(int key, t_game* game);
 void*	image_creation(t_game* game, t_tile* new_tile);
-void	tile_coordinates(t_game* game);
+void	new_tile_coordinates(t_game *game, t_tile *tile, int x, int y);
+void	ft_full_grid_clean(t_game *game);
+void	tiles_coordinates(t_game *game);
 
 #endif

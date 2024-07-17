@@ -6,32 +6,36 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:13:27 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/16 12:52:26 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/17 16:04:32 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-void	my_pixel_put(t_image* image, int x_axis, int y_axis, unsigned int color)
+void	pixel_put(t_image *image, int x_axis, int y_axis, unsigned int color)
 {
 	char	*pixel;
 
+	if (!image)
+		close_game("Error on pixel_put call", NULL, CLOSE_FAILURE);
 	pixel = NULL;
 	pixel = image->address;
-	pixel += y_axis * image->line_lenght; 
+	pixel += y_axis * image->line_lenght;
 	pixel += x_axis * image->bytes_per_pixel;
 	*(unsigned int *)pixel = color;
 }
 
-void pixel_fill(t_image* image, t_game* game, t_tile* new_tile)
+void	pixel_fill(t_image *image, t_game *game, t_tile *new_tile)
 {
 	int				x_axis;
 	int				y_axis;
 	unsigned int	color;
 
-	if (new_tile->type == '0')
+	if (!image || !game || !new_tile)
+		close_game("Error on pixel_fill call", NULL, CLOSE_FAILURE);
+	if (new_tile->type == '0') //Check how to properly handle this later
 		color = 0x00FFFFFF;
-	else if (new_tile->type == 'P')
+	else
 		color = 0x00FF0000;
 	y_axis = 0;
 	while (y_axis < TILE_HEIGHT)
@@ -39,102 +43,84 @@ void pixel_fill(t_image* image, t_game* game, t_tile* new_tile)
 		x_axis = 0;
 		while (x_axis < TILE_WIDTH)
 		{
-			my_pixel_put(image, x_axis, y_axis, color);
+			pixel_put(image, x_axis, y_axis, color);
 			x_axis++;
 		}
 		y_axis++;
 	}
 }
 
-void* image_creation(t_game* game, t_tile* new_tile)
+void	*image_creation(t_game *game, t_tile *new_tile)
 {
 	t_image	new_image;
-	int		bytes_per_pixel;
 
-	printf("and now mlx pointer is %p\n", game->mlx_connection);
-	write(1, "testbrasil\n", 12);
-	new_image.image = mlx_new_image(game->mlx_connection, TILE_WIDTH, TILE_HEIGHT);
-	write(1, "testuepa\n", 9);
-	if (!new_image.image)
-	{
-		write(1, "biridim\n", 9);
-		close_game_failure(game, NULL);
-	}
-	new_image.address = mlx_get_data_addr(new_image.image, &new_image.bits_per_pixel, &new_image.line_lenght, &new_image.endian);
+	if (!game || !new_tile)
+		close_game("Error on image_creation call", NULL, CLOSE_FAILURE);
+	new_image.image_ptr = NULL;
+	new_image.address = NULL;
+	new_image.image_ptr = mlx_new_image(game->mlx_ptr, TILE_WIDTH, TILE_HEIGHT);
+	if (!new_image.image_ptr)
+		close_game("Failure creating new img", game, CLOSE_FAILURE);
+	new_image.address = mlx_get_data_addr(new_image.image_ptr, &new_image.bits_per_pixel, &new_image.line_lenght, &new_image.endian);
 	if (!new_image.address)
-		close_game_failure(game, new_image.image);
+		close_game("Failure creating img address", game, CLOSE_FAILURE);
 	new_image.bytes_per_pixel = (new_image.bits_per_pixel / 8);
 	pixel_fill(&new_image, game, new_tile);
-	return (new_image.image);
+	return (new_image.image_ptr);
 }
 
-t_tile*	tile_creation(t_game* game, int x, int y, t_tile*** grid)
+t_tile *tile_creation(t_game *game, int x, int y, t_tile ***grid)
 {
-	t_tile*		new_tile;
-	t_player	player;
+	t_tile		*new_tile;
 
-	new_tile = malloc(sizeof(t_tile));
+	if (!game || !grid)
+		close_game("Error on tile_creation call", NULL, CLOSE_FAILURE);
+	new_tile = NULL;
+	new_tile = ft_calloc(1, sizeof(t_tile));
+	if (!new_tile)
+		close_game("ft_calloc failure on tile", game, CLOSE_FAILURE);
+	new_tile->image = NULL;
+	new_tile->right_tile = NULL;
+	new_tile->left_tile = NULL;
+	new_tile->up_tile = NULL;
+	new_tile->down_tile = NULL;
 	new_tile->x_grid = x;
 	new_tile->y_grid = y;
-
-	if (new_tile->x_grid == 0 && new_tile->y_grid == 0)
+	if (new_tile->x_grid == 0 && new_tile->y_grid == 0) //Temporary code while we dont have a map
 	{
 		new_tile->type = 'P';
-		// player.tile = new_tile;
 		game->player.tile = new_tile;
 	}
 	else
 		new_tile->type = '0';
-
-	if (x < (game->width_tile_size - 1))
-		new_tile->right_tile = grid[y][x + 1];
-	if (x > 0)
-		new_tile->left_tile = grid[y][x - 1];
-	if (y > 0)
-		new_tile->up_tile = grid[y - 1][x];
-	if (y < (game->height_tile_size - 1))
-		new_tile->down_tile = grid[y + 1][x];
-
 	new_tile->image = image_creation(game, new_tile);
-	mlx_put_image_to_window(game->mlx_connection, game->window, new_tile->image, x * TILE_WIDTH, y * TILE_HEIGHT);
+	mlx_put_image_to_window(game->mlx_ptr, game->window, new_tile->image, x * TILE_WIDTH, y * TILE_HEIGHT);
 	return (new_tile);
 }
 
-t_tile*** grid_allocation(t_game* game)
+void	tiles_coordinates(t_game *game)
 {
-	int		y;
-
-	game->grid = malloc(sizeof(t_tile*) * (game->height_tile_size));
-	y = 0;
-	while (y < game->height_tile_size)
-	{
-		game->grid[y] = malloc(sizeof(t_tile*) * (game->width_tile_size));
-		y++;
-	}
-	return (game->grid);
-}
-
-void tile_coordinates(t_game* game)
-{
-	t_tile*	tmp;
+	t_tile	*tmp;
 	int		x;
 	int		y;
 
-	x = 0;
+	if (!game)
+		close_game("Error on tile_coordinates call", NULL, CLOSE_FAILURE);
+	tmp = NULL;
 	y = 0;
-	while (y < game->height_tile_size)
+	while (y < game->tile_height)
 	{
 		x = 0;
-		while (x < game->width_tile_size)
+		while (x < game->tile_width)
 		{
 			tmp = game->grid[y][x];
-			if (x < (game->width_tile_size - 1))
+			if (x < (game->tile_width - 1))
 				tmp->right_tile = game->grid[y][x + 1];
 			if (x > 0)
 				tmp->left_tile = game->grid[y][x - 1];
 			if (y > 0)
 				tmp->up_tile = game->grid[y - 1][x];
-			if (y < (game->height_tile_size - 1))
+			if (y < (game->tile_height - 1))
 				tmp->down_tile = game->grid[y + 1][x];
 			x++;
 		}
@@ -142,92 +128,77 @@ void tile_coordinates(t_game* game)
 	}
 }
 
-void grid_creation(t_game* game)
+t_tile	***grid_allocation(t_game *game)
+{
+	int		y;
+
+	if (!game)
+		close_game("Error on grid allocation call", NULL, CLOSE_FAILURE);
+	game->grid = ft_calloc(game->tile_height, sizeof(t_tile*));
+	if (!game->grid)
+		close_game("ft_calloc failure on grid", game, CLOSE_FAILURE);
+	y = 0;
+	while (y < game->tile_height)
+	{
+		game->grid[y] = ft_calloc(game->tile_width, sizeof(t_tile*));
+		if (!game->grid[y])
+			close_game("ft_calloc failure on grid line", game, CLOSE_FAILURE);
+		y++;
+	}
+	return (game->grid);
+}
+
+void	grid_creation(t_game *game)
 {
 	int		x;
 	int		y;
 
+	if (!game)
+		close_game("Error on grid_creation call", NULL, CLOSE_FAILURE);
 	game->grid = grid_allocation(game);
 	x = 0;
 	y = 0;
-	while (y < game->height_tile_size)
+	while (y < game->tile_height)
 	{
 		x = 0;
-		while (x < game->width_tile_size)
+		while (x < game->tile_width)
 		{
-			// write(1, "brasil\n", 8);
 			game->grid[y][x] = tile_creation(game, x, y, game->grid);
 			x++;
 		}
 		y++;
 	}
-	tile_coordinates(game);
+	tiles_coordinates(game);
 }
 
-int	main (int argc, char **argv)
+t_game	start_graphics(void)
 {
-	//int	check_errors; map, argc, argv, etc.
 	t_game	game;
 
-	// if (argc != 2)
-	// 	return (EXIT_FAILURE);
-	game.mlx_connection = mlx_init();
-	if (!game.mlx_connection)
-		return (EXIT_FAILURE);
-	game.width_tile_size = 10;
-	game.height_tile_size = 10;
-	game.pixel_widht = (TILE_WIDTH * game.width_tile_size);
-	game.pixel_height = (TILE_HEIGHT * game.height_tile_size);
-	game.window = mlx_new_window(game.mlx_connection, game.pixel_widht, game.pixel_height, "Custom Pac-Man");
+	game.mlx_ptr = NULL;
+	game.window = NULL;
+	game.grid = NULL;
+	game.player.tile = NULL;
+	game.mlx_ptr = mlx_init();
+	if (!game.mlx_ptr)
+		close_game("Error starting MLX connection", NULL, CLOSE_FAILURE);
+	game.tile_width = 10; //Temporary map size definition
+	game.tile_height = 10; //Temporary map size definition
+	game.pixel_width = (TILE_WIDTH * game.tile_width);
+	game.pixel_height = (TILE_HEIGHT * game.tile_height);
+	game.window = mlx_new_window(game.mlx_ptr, game.pixel_width, game.pixel_height, "Custom Pac-Man");
 	if (!game.window)
-		close_game_failure(&game, NULL);
-	grid_creation(&game);
-	mlx_key_hook(game.window, key_press, &game);
-	mlx_loop(game.mlx_connection);
+		close_game("Error initializing game window", &game, CLOSE_FAILURE);
+	return (game);
 }
 
-/*
+int	main(void)
+{
+	t_game	game;
+	//Check pointers on argv and etc.
 
-Objectives:
-1 - Initialize connection, window, etc.
-2 - Put some shit on screen
-3 - On ESC key, close program
-4 - 
-5 - 
-
-Backlog: 
-- Map and map structure
-- Player
-- Collectibles
-- Usar mlx_get_screen_size para entender melhor como estruturar a parada, sepa jogo do tamanho da tela?
-- mlx_hook(game.window, DestroyNotify, StructureNotifyMask, close_game_success, &game);
-- If game is too much big for the current screen, display error
-- Game file must be compatible with the map size. If map is 10 x 5, then stuff should be 10 x 64 (640) and 5 x 64 (320)
-
-*/
-
-/*
-
-// /* Allocates memory to save a tilemap with same size as <map> */
-// t_tile	**alloc_tilemap(char **map)
-// {
-// 	t_tile	**tilemap;
-// 	int		i;
-
-// 	tilemap = malloc(sizeof(t_tile *) * ft_chartable_linecount(map) + 1);
-// 	if (tilemap == NULL)
-// 		return (NULL);
-// 	i = 0;
-// 	while (map[i] != NULL)
-// 	{
-// 		tilemap[i] = malloc(sizeof(t_tile) * ft_strlen(*map) + 1);
-// 		if (tilemap == NULL)
-// 		{
-// 			while (i > 0)
-// 				free(tilemap[--i]);
-// 			return (NULL);
-// 		}
-// 		i++;
-// 	}
-// 	return (tilemap);
-// }
+	game = start_graphics();
+	grid_creation(&game);
+	mlx_key_hook(game.window, key_press, &game);
+	mlx_loop(game.mlx_ptr);
+}

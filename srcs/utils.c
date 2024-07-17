@@ -6,75 +6,56 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 13:58:24 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/16 12:57:54 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/17 16:02:53 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-int close_game_failure(t_game *game, t_image* image)
-{
-	if (image)
-		mlx_destroy_image(game->mlx_connection, image->image);
-	if (game->window)
-		mlx_destroy_window(game->mlx_connection, game->window);
-	mlx_destroy_display(game->mlx_connection);
-	exit(EXIT_FAILURE);
-}
-
-int close_game_success(t_game *game)
-{
-	// if (image->image)
-	// 	mlx_destroy_image(game->mlx_connection, )
-	if (game->window)
-		mlx_destroy_window(game->mlx_connection, game->window);
-	mlx_destroy_display(game->mlx_connection);
-	exit(EXIT_SUCCESS);
-}
-
-void	player_movement(t_tile* old_position, t_tile* new_position, t_game* game)
+void	player_move(t_game *game, t_tile *old_pos, t_tile *new_pos)
 {
 	t_image	new_empty;
 	t_image	new_player;
 
-	old_position->type = '0';
-	new_position->type = 'P';
-	write(1, "test\n", 5);
-	printf("and here mlx pointer is %p\n", game->mlx_connection);
-	new_empty.image = image_creation(game, old_position);
-	new_player.image = image_creation(game, new_position);
-	mlx_put_image_to_window(game->mlx_connection, game->window, new_empty.image, ((old_position->x_grid) * TILE_WIDTH), \
-	((old_position->y_grid) * TILE_HEIGHT));
-	mlx_put_image_to_window(game->mlx_connection, game->window, new_player.image, ((new_position->x_grid) * TILE_WIDTH), \
-	((new_position->y_grid) * TILE_HEIGHT));
-	mlx_destroy_image(game->mlx_connection, old_position->image);
-	mlx_destroy_image(game->mlx_connection, new_position->image);
-	old_position->image = new_empty.image;
-	new_position->image = new_empty.image;
-	game->player.tile = new_position;
-	tile_coordinates(game); //optmize to only adjust the required tiles
+	if (!game || !old_pos || !new_pos)
+		close_game("Error on player_move call", game, CLOSE_FAILURE);
+	new_empty.image_ptr = NULL;
+	new_empty.address = NULL;
+	new_player.image_ptr = NULL;
+	new_player.address = NULL;
+	old_pos->type = '0';
+	new_pos->type = 'P';
+	game->player.tile = new_pos;
+	new_empty.image_ptr = image_creation(game, old_pos);
+	new_player.image_ptr = image_creation(game, new_pos);
+	mlx_put_image_to_window(game->mlx_ptr, game->window, new_empty.image_ptr, \
+	((old_pos->x_grid) * TILE_WIDTH), ((old_pos->y_grid) * TILE_HEIGHT));
+	mlx_put_image_to_window(game->mlx_ptr, game->window, new_player.image_ptr, \
+	((new_pos->x_grid) * TILE_WIDTH), ((new_pos->y_grid) * TILE_HEIGHT));
+	mlx_destroy_image(game->mlx_ptr, old_pos->image);
+	mlx_destroy_image(game->mlx_ptr, new_pos->image);
+	old_pos->image = new_empty.image_ptr;
+	new_pos->image = new_player.image_ptr;
 }
 
-int	key_press(int key, t_game* game)
+int	key_press(int key, t_game *game)
 {
-	t_tile*	player_tile;
+	t_tile	*player_tile;
 
+	if (!game)
+		close_game("Error on key_press call", NULL, CLOSE_FAILURE);
+	player_tile = NULL;
 	player_tile = game->player.tile;
-	// printf("%p\n", player_tile->right_tile);
-	printf("mlx pointer is %p\n", game->mlx_connection);
 	if (key == ESC)
-		close_game_success(game);
+		close_game(NULL, game, CLOSE_SUCCESS);
 	else if (key == RIGHT_KEY)
-	{
-		write(1, "analyzis\n", 10);
-		player_movement(player_tile, player_tile->right_tile, game);
-	}
+		player_move(game, player_tile, player_tile->right_tile);
 	else if (key == LEFT_KEY)
-		player_movement(player_tile, player_tile->left_tile, game);
+		player_move(game, player_tile, player_tile->left_tile);
 	else if (key == UP_KEY)
-		player_movement(player_tile, player_tile->up_tile, game);
+		player_move(game, player_tile, player_tile->up_tile);
 	else if (key == DOWN_KEY)
-		player_movement(player_tile, player_tile->down_tile, game);
+		player_move(game, player_tile, player_tile->down_tile);
 	else
 		return (0);
 	return (1);
