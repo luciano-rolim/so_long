@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 10:25:44 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/21 14:54:54 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:10:52 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,15 @@ void	ft_full_grid_clean(t_game *game)
 		x = 0;
 		while (x < game->map.horizontal_tiles)
 		{
-			if (game->grid[y][x])
-				free(game->grid[y][x]);
+			if (game->map.grid[y][x])
+				free(game->map.grid[y][x]);
 			x++;
 		}
-		if (game->grid[y])
-			free(game->grid[y]);
+		if (game->map.grid[y])
+			free(game->map.grid[y]);
 		y++;
 	}
-	free(game->grid);
+	free(game->map.grid);
 }
 
 void	clean_lines(t_game *game)
@@ -69,7 +69,7 @@ int	close_game(char *message, t_game *game, t_close_status status)
 {
 	if (game)
 	{
-		if (game->grid)
+		if (game->map.grid)
 			ft_full_grid_clean(game);
 		if (game->window)
 			mlx_destroy_window(game->mlx_ptr, game->window);

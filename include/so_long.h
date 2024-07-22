@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:15:37 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/21 15:59:52 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:12:39 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ typedef struct s_game
 {
 	void			*mlx_ptr;
 	void			*window;
-	t_tile			***grid;
 	t_map			map;
 	t_images		images;
 	t_player		player;
