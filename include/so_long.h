@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:15:37 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 09:12:39 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/22 10:29:54 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,13 @@ typedef enum e_close_status
 	CLOSE_OTHERS
 }	t_close_status;
 
+typedef struct s_tmp_var
+{
+	char			*buffer;
+	int				file_fd;
+	int				line_count;
+} t_tmp_var;
+
 typedef struct s_line
 {
 	char			*content;
@@ -96,7 +103,6 @@ typedef struct s_map
 	int				total_pixel_width;
 	int				total_pixel_height;
 	char			*types;
-	char			**map;
 	t_tile			***grid;
 	t_line			*list;
 }	t_map;
@@ -108,14 +114,30 @@ typedef struct s_game
 	t_map			map;
 	t_images		images;
 	t_player		player;
+	t_tmp_var		tmp_var;
 }	t_game;
 
+//Map functions
+void	build_map(t_game *game, char *filename);
+void	handle_line_error(char *message, t_game *game, char *buffer, int file_fd);
+void	additional_map_checks(t_game *game, char *buffer, int file_fd);
+void	clean_buffer_fd_gnl(char* buffer, int file_fd);
+
+//General functions
 int		close_game(char *message, t_game *game, t_close_status status);
 int		key_press(int key, t_game *game);
-void	*image_creation(t_game *game, t_tile *new_tile);
-void	new_tile_coordinates(t_game *game, t_tile *tile, int x, int y);
+
+
+// void	*image_creation(t_game *game, t_tile *new_tile);
+// void	new_tile_coordinates(t_game *game, t_tile *tile, int x, int y);
 void	ft_full_grid_clean(t_game *game);
 void	tiles_coordinates(t_game *game);
+
+
+//Node functions
+void	add_new_node(t_game *game, char *content);
+t_line	*last_node(t_line *head_node);
+
 
 #endif
 

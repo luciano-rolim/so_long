@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:13:27 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 09:12:35 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/22 10:28:03 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,179 +188,21 @@ int	check_extension(char *filename)
 	return (1);
 }
 
-void	map_allocation(t_game *game)
+void structs_initialization(t_game *game)
 {
-	int		y;
-
-	if (!game)
-		close_game("Error\nInvalid grid allocation call", NULL, CLOSE_OTHERS);
-	game->map.map = ft_calloc(game->map.vertical_tiles, sizeof(char*));
-	if (!game->map.map)
-		close_game("Error\nft_calloc failure on map", game, CLOSE_FAILURE);
-	y = 0;
-	while (y < game->map.vertical_tiles)
-	{
-		game->map.map[y] = ft_calloc(game->map.horizontal_tiles, sizeof(char));
-		if (!game->map.map[y])
-			close_game("Error\nft_calloc failure on map line", game, CLOSE_FAILURE);
-		y++;
-	}
-}
-
-t_line *last_node(t_line *head_node)
-{
-	t_line *tmp_tile;
-
-	if (!head_node)
-		return (NULL);
-	tmp_tile = head_node;
-	while (tmp_tile->next_line)
-		tmp_tile = tmp_tile->next_line;
-	return (tmp_tile);
-}
-
-void add_new_node(t_game *game, char *content)
-{
-	//i need to build this function my way
-	t_line	*new_node;
-	t_line	*last_tile;
-
-	if (!game || !content)
-		close_game("Error\nError on add_new_node call", game, CLOSE_OTHERS);
-	new_node = malloc(sizeof(t_line));
-	if (!new_node)
-		close_game("Error\nft_calloc failure on new node", game, CLOSE_FAILURE);
-	new_node->content = content;
-	new_node->next_line = NULL;
-	if (!game->map.list)
-	{
-		game->map.list = new_node;
-		return ;
-	}
-	last_tile = last_node(game->map.list);
-	last_tile->next_line = new_node;
-}
-
-void	clean_buffer_fd_gnl(char* buffer, int file_fd)
-{
-	if (buffer)
-		free(buffer);
-	while ((buffer = get_next_line(file_fd)) != NULL)
-		free(buffer);
-	close(file_fd);
-}
-
-int player_checks(t_game *game)
-{
-	int		i;
-	int 	has_player;
-	t_line	*tmp;
-
-	if (!game)
-		close_game("Error\nInvalid player checks function call", game, CLOSE_OTHERS);
-	has_player = 0;
-	tmp = game->map.list;
-	while (tmp)
-	{
-		i = 0;
-		while (tmp->content[i])
-		{
-			if (tmp->content[i] == 'P')
-				has_player++;
-			i++;
-		}
-		tmp = tmp->next_line;
-	}
-	if (has_player == 1)
-		return (1);
-	else
-		return (0);
-}
-
-void	build_map(t_game *game, char *filename)
-{
-	int		file_fd;
-	char	*buffer;
-	int		line_len;
-	int		line_count;
-	t_line	*last_row;
-
-	if (!game || !filename)
-		close_game("Error\nInvalid build_map call", game, CLOSE_OTHERS);
-	buffer = NULL;
-	last_row = NULL;
-	game->map.list = NULL;
-	game->map.map = NULL;
-	game->map.grid = NULL;
-	game->map.types = NULL;
+	game->mlx_ptr = NULL;
+	game->window = NULL;
+	game->player.tile = NULL;
+	game->player.movements = 0;
+	game->images.player = NULL;
+	game->images.background = NULL;
+	game->images.wall = NULL;
 	game->map.types = "01P";
-	file_fd = open(filename, O_RDONLY);
-	if (file_fd == -1)
-		close_game("Error\nOpen function failure", game, CLOSE_FAILURE);
-	line_count = 0;
-	line_len = 0;
-	while (1)
-	{
-		buffer = get_next_line(file_fd);
-		if (!buffer)
-		{
-			if (line_count == 0)
-			{
-				clean_buffer_fd_gnl(buffer, file_fd);
-				close_game("Error\nMap file is empty", game, CLOSE_OTHERS);
-			}
-			else
-				break ;
-		}
-		line_len = ft_strlen(buffer);
-		if (buffer[line_len - 1] == '\n')
-		{
-			buffer[line_len - 1] = '\0';
-			line_len -= 1;
-		}
-		if (line_count == 0)
-		{
-			if (!ft_is_string_char_set(buffer, "1"))
-			{
-				clean_buffer_fd_gnl(buffer, file_fd);
-				close_game("Error\nFirst row must be made only by walls", game, CLOSE_OTHERS);
-			}
-			game->map.horizontal_tiles = (line_len);
-		}
-		else
-		{
-			if (buffer[0] != '1' || buffer[line_len - 1] != '1')
-			{
-				clean_buffer_fd_gnl(buffer, file_fd);
-				close_game("Error\nMap is not surrounded by walls", game, CLOSE_OTHERS);
-			}
-			if ((line_len) != game->map.horizontal_tiles)
-			{
-				clean_buffer_fd_gnl(buffer, file_fd);
-				close_game("Error\nMap is not rectangular", game, CLOSE_OTHERS);
-			}
-		}
-		if (!ft_is_string_char_set(buffer, game->map.types))
-		{
-			clean_buffer_fd_gnl(buffer, file_fd);
-			close_game("Error\nInvalid map char", game, CLOSE_OTHERS);
-		}
-		add_new_node(game, buffer);
-		line_count++;
-	}
-	last_row = last_node(game->map.list);
-	if (!ft_is_string_char_set(last_row->content, "1"))
-	{
-		clean_buffer_fd_gnl(buffer, file_fd);
-		close_game("Error\nLast row must be made only by walls", game, CLOSE_OTHERS);
-	}
-	game->map.vertical_tiles = line_count;
-	if (!player_checks(game))
-	{
-		clean_buffer_fd_gnl(buffer, file_fd);
-		close_game("Error\nGame must have exactly one player", game, CLOSE_OTHERS);		
-	}
-	clean_buffer_fd_gnl(buffer, file_fd);
+	game->map.grid = NULL;
+	game->map.list = NULL;
+	game->tmp_var.buffer = NULL;
+	game->tmp_var.file_fd = -1;
+	game->tmp_var.line_count = 0;
 }
 
 int	main(int argc, char **argv)
@@ -371,11 +213,7 @@ int	main(int argc, char **argv)
 		close_game("Error\nInvalid game arguments", NULL, CLOSE_OTHERS);
 	if (!check_extension(argv[1]))
 		close_game("Error\nMap file must be .ber type", NULL, CLOSE_OTHERS);
-	game.mlx_ptr = NULL;
-	game.window = NULL;
-	game.images.player = NULL;
-	game.images.background = NULL;
-	game.images.wall = NULL;
+	structs_initialization(&game);
 	build_map(&game, argv[1]);
 	start_graphics(&game);
 	start_images(&game);
