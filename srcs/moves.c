@@ -6,13 +6,13 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 13:58:24 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 09:09:11 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/22 10:54:58 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-void	player_move(t_game *game, t_tile *old_pos, t_tile *new_pos)
+static void	player_move(t_game *game, t_tile *old_pos, t_tile *new_pos)
 {
 	if (!game || !old_pos || !new_pos)
 		close_game("Error\nError on player_move call", game, CLOSE_FAILURE);

@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:15:37 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 10:29:54 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/22 11:16:32 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,36 +117,26 @@ typedef struct s_game
 	t_tmp_var		tmp_var;
 }	t_game;
 
+//General functions
+void	close_game(char *message, t_game *game, t_close_status status);
+int		exit_program(char *message, t_close_status status);
+int		key_press(int key, t_game *game);
+
 //Map functions
 void	build_map(t_game *game, char *filename);
 void	handle_line_error(char *message, t_game *game, char *buffer, int file_fd);
 void	additional_map_checks(t_game *game, char *buffer, int file_fd);
-void	clean_buffer_fd_gnl(char* buffer, int file_fd);
+void	clean_buffer_fd_gnl(char* buffer, int file_fd, t_game *game);
 
-//General functions
-int		close_game(char *message, t_game *game, t_close_status status);
-int		key_press(int key, t_game *game);
+//Grid and tiles creation
+void	grid_creation(t_game *game);
+void	tile_completion(t_game *game);
 
-
-// void	*image_creation(t_game *game, t_tile *new_tile);
-// void	new_tile_coordinates(t_game *game, t_tile *tile, int x, int y);
-void	ft_full_grid_clean(t_game *game);
-void	tiles_coordinates(t_game *game);
-
+//Images functiosn
+void	start_images(t_game *game);
 
 //Node functions
 void	add_new_node(t_game *game, char *content);
-t_line	*last_node(t_line *head_node);
-
+t_line *last_node(t_game *game, t_line *head_node);
 
 #endif
-
-// typedef struct s_image
-// {
-// 	void*	image_ptr;
-// 	char*	address;
-// 	int		bits_per_pixel;
-// 	int		bytes_per_pixel;
-// 	int		line_lenght;
-// 	int		endian;
-// } t_image;

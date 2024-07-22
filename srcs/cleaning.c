@@ -6,13 +6,13 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 10:25:44 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 09:10:52 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/22 11:09:56 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-void clean_images(t_game *game)
+static void clean_images(t_game *game)
 {
 	if (!game)
 		return ;
@@ -24,7 +24,7 @@ void clean_images(t_game *game)
 		mlx_destroy_image(game->mlx_ptr, game->images.wall);
 }
 
-void	ft_full_grid_clean(t_game *game)
+static void	ft_full_grid_clean(t_game *game)
 {
 	if(!game)
 		return ;
@@ -48,7 +48,7 @@ void	ft_full_grid_clean(t_game *game)
 	free(game->map.grid);
 }
 
-void	clean_lines(t_game *game)
+static void	clean_lines(t_game *game)
 {
 	t_line	*tmp;
 
@@ -65,7 +65,24 @@ void	clean_lines(t_game *game)
 	}
 }
 
-int	close_game(char *message, t_game *game, t_close_status status)
+int	exit_program(char *message, t_close_status status)
+{
+	if (status == CLOSE_SUCCESS)
+		exit(EXIT_SUCCESS);
+	else
+	{
+		if (message)
+		{
+			if (status == CLOSE_FAILURE)
+				perror(message);
+			else
+				ft_printf("%s\n", message);
+		}
+		exit(EXIT_FAILURE);
+	};
+}
+
+void	close_game(char *message, t_game *game, t_close_status status)
 {
 	if (game)
 	{
@@ -82,17 +99,5 @@ int	close_game(char *message, t_game *game, t_close_status status)
 			free(game->mlx_ptr);
 		}
 	}
-	if (status == CLOSE_SUCCESS)
-		exit(EXIT_SUCCESS);
-	else
-	{
-		if (message)
-		{
-			if (status == CLOSE_FAILURE)
-				perror(message);
-			else
-				ft_printf("%s\n", message);
-		}
-		exit(EXIT_FAILURE);
-	};
+	exit_program(message, status);
 }
