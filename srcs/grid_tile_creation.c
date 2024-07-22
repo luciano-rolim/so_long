@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 10:49:21 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 11:11:38 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:59:23 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,15 @@ static void	tile_image_attribution(t_game *game, t_tile *tile)
 	{
 		tile->image = game->images.player;
 		game->player.tile = tile;
-		game->player.movements = 0;
 	}
 	else if (tile->type == EMPTY)
 		tile->image = game->images.background;
 	else if (tile->type == WALL)
 		tile->image = game->images.wall;
+	else if (tile->type == EXIT)
+		tile->image = game->images.exit;
+	else if (tile->type == COLLECTIBLE)
+		tile->image = game->images.collectible;
 	else
 		close_game("Error\nInvalid tile->image type", game, CLOSE_OTHERS);
 }
@@ -61,8 +64,7 @@ static void	put_tiles_on_screen(t_game *game, t_line *tmp_line, int y)
 		tmp_tile->type = tmp_line->content[i];
 		tile_image_attribution(game, tmp_tile);
 		tile_coordinates(game, tmp_tile, x, y);
-		mlx_put_image_to_window(game->mlx_ptr, game->window, tmp_tile->image, \
-		tmp_tile->x_grid * TILE_WIDTH, tmp_tile->y_grid * TILE_HEIGHT);
+		put_image(game, tmp_tile->image, tmp_tile->x_grid, tmp_tile->y_grid);
 		x++;
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:15:37 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 11:16:32 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:34:23 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ typedef enum e_tile_type
 	EMPTY = '0',
 	WALL = '1',
 	COLLECTIBLE = 'C',
-	EXIT = 'E'
+	EXIT = 'E',
+	EXIT_AND_PLAYER
 }	t_tile_type;
 
 typedef enum e_key_code
@@ -63,6 +64,8 @@ typedef struct s_tmp_var
 	char			*buffer;
 	int				file_fd;
 	int				line_count;
+	int				exit_found;
+	int				collectables_found;
 } t_tmp_var;
 
 typedef struct s_line
@@ -76,6 +79,7 @@ typedef struct s_tile
 	void				*image;
 	int					x_grid;
 	int					y_grid;
+	int					checked;
 	t_tile_type			type;
 	struct s_tile		*right_tile;
 	struct s_tile		*left_tile;
@@ -94,6 +98,9 @@ typedef struct s_images
 	void	*player;
 	void	*background;
 	void	*wall;
+	void	*exit;
+	void	*collectible;
+	void	*exit_and_player;
 }	t_images;
 
 typedef struct s_map
@@ -102,6 +109,7 @@ typedef struct s_map
 	int				vertical_tiles;
 	int				total_pixel_width;
 	int				total_pixel_height;
+	int				collectibles;
 	char			*types;
 	t_tile			***grid;
 	t_line			*list;
@@ -138,5 +146,8 @@ void	start_images(t_game *game);
 //Node functions
 void	add_new_node(t_game *game, char *content);
 t_line *last_node(t_game *game, t_line *head_node);
+
+//Generic utils
+void	put_image(t_game *game, void *image, int x, int y);
 
 #endif

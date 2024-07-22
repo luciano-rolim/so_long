@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:13:27 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 11:13:52 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:51:01 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,46 @@ static void structs_initialization(t_game *game)
 	game->images.player = NULL;
 	game->images.background = NULL;
 	game->images.wall = NULL;
-	game->map.types = "01P";
+	game->images.exit = NULL;
+	game->images.collectible = NULL;
+	game->images.exit_and_player = NULL;
+	game->map.types = "01PEC";
 	game->map.grid = NULL;
 	game->map.list = NULL;
+	game->map.collectibles = 0;
 	game->tmp_var.buffer = NULL;
 	game->tmp_var.file_fd = -1;
 	game->tmp_var.line_count = 0;
+	game->tmp_var.exit_found = 0;
+	game->tmp_var.collectables_found = 0;
+}
+
+void	search_valid_path(t_game *game, t_tile *current_tile)
+{
+	if (!game)
+		close_game("Error\nInvalid search_valid_path call", NULL, CLOSE_OTHERS);
+	if (!current_tile)
+		return ;
+	if (current_tile->checked == 1)
+		return ;
+	current_tile->checked = 1;
+	if (current_tile->type == WALL)
+		return ;
+	else if (current_tile->type == COLLECTIBLE)
+		game->tmp_var.collectables_found++;
+	else if (current_tile->type == EXIT)
+		game->tmp_var.exit_found++;
+	search_valid_path(game, current_tile->up_tile);
+	search_valid_path(game, current_tile->right_tile);
+	search_valid_path(game, current_tile->down_tile);
+	search_valid_path(game, current_tile->left_tile);
+}
+
+void	valid_path(t_game *game)
+{
+	search_valid_path(game, game->player.tile);
+	if (game->tmp_var.exit_found != 1 || (game->tmp_var.collectables_found != game->map.collectibles))
+		close_game("Error\nPath is blocked", game, CLOSE_OTHERS);
 }
 
 int	main(int argc, char **argv)
@@ -72,6 +106,7 @@ int	main(int argc, char **argv)
 	start_graphics(&game);
 	start_images(&game);
 	grid_creation(&game);
+	valid_path(&game);
 	mlx_key_hook(game.window, key_press, &game);
 	mlx_loop(game.mlx_ptr);
 	close_game(NULL, &game, CLOSE_SUCCESS);

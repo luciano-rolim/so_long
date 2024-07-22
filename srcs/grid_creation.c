@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 10:32:23 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 10:49:29 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:58:31 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static t_tile	*tile_creation(t_game *game, int x, int y, t_tile ***grid)
 	new_tile->down_tile = NULL;
 	new_tile->x_grid = x;
 	new_tile->y_grid = y;
+	new_tile->checked = 0;
 	return (new_tile);
 }
 

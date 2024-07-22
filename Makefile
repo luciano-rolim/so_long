@@ -6,7 +6,7 @@
 #    By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/10 12:12:03 by lmeneghe          #+#    #+#              #
-#    Updated: 2024/07/22 10:53:33 by lmeneghe         ###   ########.fr        #
+#    Updated: 2024/07/22 14:02:16 by lmeneghe         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ MLX_LIBS       = -L$(MLX_DIR) -lmlx_Linux -L/usr/lib -lXext -lX11 -lz -lm
 # Source Files
 SRC_FILES       =	srcs/main.c srcs/moves.c srcs/cleaning.c srcs/build_map.c srcs/build_map_utils.c \
 					srcs/node_functions.c srcs/grid_creation.c srcs/grid_tile_creation.c srcs/images.c \
+					srcs/generic_utils.c
 
 # Object files
 OBJS_DIR        = objs/
