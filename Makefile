@@ -6,7 +6,7 @@
 #    By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/10 12:12:03 by lmeneghe          #+#    #+#              #
-#    Updated: 2024/07/18 11:15:45 by lmeneghe         ###   ########.fr        #
+#    Updated: 2024/07/21 15:48:57 by lmeneghe         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,19 +14,21 @@
 NAME            = so_long
 
 # Lib Directories
-LIBFT_DIR       = ./libs/libft/
-PRINTF_DIR      = ./libs/ft_printf/
-MLX_DIR         = ./libs/mlx_linux/
+LIBFT_DIR       	= ./libs/libft/
+PRINTF_DIR      	= ./libs/ft_printf/
+GET_NEXT_LINE_DIR	= ./libs/get_next_line/
+MLX_DIR				= ./libs/mlx_linux/
 
 # Compiler and Flags
 CC              = gcc
-CFLAGS          = #-Wall -Wextra -Werror 
+CFLAGS          = -Wall -Wextra -Werror 
 
 #REMEMBER TO PUT THE FLAGS BACK LATER
 
 # Library files
 LIBFT           = $(LIBFT_DIR)libft.a
 PRINTF          = $(PRINTF_DIR)libprintf.a
+GET_NEXT_LINE	= $(GET_NEXT_LINE_DIR)libgnl.a
 MLX				= $(MLX_DIR)libmlx_Linux.a
 
 # MLX associated Libs required for program compilation 
@@ -46,9 +48,10 @@ setup_mlx:
 				fi
 
 # Main rule: compile libraries and then the program.
-$(NAME):		setup_mlx $(MLX) $(OBJS) $(LIBFT) $(PRINTF)
+$(NAME):		setup_mlx $(MLX) $(OBJS) $(LIBFT) $(PRINTF) $(GET_NEXT_LINE)
 				@$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft \
-				-L$(PRINTF_DIR) -lprintf $(MLX_LIBS) -o $(NAME)
+				-L$(PRINTF_DIR) -lprintf -L$(GET_NEXT_LINE_DIR) -lgnl \
+				$(MLX_LIBS) -o $(NAME)
 
 # Command to execute make inside libft folder and generate libft.a file
 $(LIBFT):
@@ -57,6 +60,10 @@ $(LIBFT):
 # Command to execute make inside printf folder and generate libprintf.a file
 $(PRINTF):
 				@make -C $(PRINTF_DIR)
+
+# Command to execute make inside GNL folder and generate libgnl.a file
+$(GET_NEXT_LINE):
+				@make -C $(GET_NEXT_LINE_DIR)
 
 # Command to execute make inside mlx folder and generate libmlx.a file
 $(MLX):
@@ -80,6 +87,7 @@ fclean:         clean
 				@rm -f $(NAME)
 				@make fclean -C $(LIBFT_DIR)
 				@make fclean -C $(PRINTF_DIR)
+				@make fclean -C $(GET_NEXT_LINE_DIR)
 				@make clean -C $(MLX_DIR)
 
 # Standard re command

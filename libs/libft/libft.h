@@ -78,5 +78,6 @@ long int	ft_lower_number(long int a, long int b);
 int			ft_isspace(int c);
 char		**ft_split_isspace(char const *s);
 char		*ft_strings_concat(char const *prefix, char *str1, char *str2);
+int			ft_is_string_char_set(char *full_str, char *char_set);
 
 #endif

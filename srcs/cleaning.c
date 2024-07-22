@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 10:25:44 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/18 12:46:28 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/21 14:54:54 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,14 @@
 
 void clean_images(t_game *game)
 {
-	mlx_destroy_image(game->mlx_ptr, game->images.player);
-	mlx_destroy_image(game->mlx_ptr, game->images.background);
-	mlx_destroy_image(game->mlx_ptr, game->images.wall);
+	if (!game)
+		return ;
+	if(game->images.player)
+		mlx_destroy_image(game->mlx_ptr, game->images.player);
+	if(game->images.background)
+		mlx_destroy_image(game->mlx_ptr, game->images.background);
+	if(game->images.wall)
+		mlx_destroy_image(game->mlx_ptr, game->images.wall);
 }
 
 void	ft_full_grid_clean(t_game *game)
@@ -27,10 +32,10 @@ void	ft_full_grid_clean(t_game *game)
 	int	y;
 
 	y = 0;
-	while (y < game->tile_height)
+	while (y < game->map.vertical_tiles)
 	{
 		x = 0;
-		while (x < game->tile_width)
+		while (x < game->map.horizontal_tiles)
 		{
 			if (game->grid[y][x])
 				free(game->grid[y][x]);
@@ -43,26 +48,51 @@ void	ft_full_grid_clean(t_game *game)
 	free(game->grid);
 }
 
+void	clean_lines(t_game *game)
+{
+	t_line	*tmp;
+
+	if (!game)
+		return ;
+	tmp = NULL;
+	tmp = game->map.list;
+	while (tmp)
+	{
+		free(tmp->content);
+		game->map.list = tmp->next_line;
+		free (tmp);
+		tmp = game->map.list;
+	}
+}
+
 int	close_game(char *message, t_game *game, t_close_status status)
 {
-	clean_images(game);
-	ft_full_grid_clean(game);
-	if (game->window)
-	{
-		mlx_clear_window(game->mlx_ptr, game->window);
-		mlx_destroy_window(game->mlx_ptr, game->window);
-	}
 	if (game)
 	{
-		mlx_destroy_display(game->mlx_ptr);
-		free(game->mlx_ptr);
+		if (game->grid)
+			ft_full_grid_clean(game);
+		if (game->window)
+			mlx_destroy_window(game->mlx_ptr, game->window);
+		if (game->map.list)
+			clean_lines(game);
+		clean_images(game);
+		if (game->mlx_ptr)
+		{
+			mlx_destroy_display(game->mlx_ptr);
+			free(game->mlx_ptr);
+		}
 	}
 	if (status == CLOSE_SUCCESS)
 		exit(EXIT_SUCCESS);
 	else
 	{
 		if (message)
-			perror(message);
+		{
+			if (status == CLOSE_FAILURE)
+				perror(message);
+			else
+				ft_printf("%s\n", message);
+		}
 		exit(EXIT_FAILURE);
-	}
+	};
 }

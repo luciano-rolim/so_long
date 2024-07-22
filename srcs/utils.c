@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 13:58:24 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/18 12:43:12 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/21 16:00:35 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,12 @@ void	player_move(t_game *game, t_tile *old_pos, t_tile *new_pos)
 {
 	if (!game || !old_pos || !new_pos)
 		close_game("Error on player_move call", game, CLOSE_FAILURE);
-
-	old_pos->type = '0';
-	new_pos->type = 'P';
+	if (new_pos->type == WALL)
+		return ;
+    if (game->player.movements == INT_MAX)
+		close_game("Maximum number of movements reached\n", game, CLOSE_OTHERS);
+	old_pos->type = EMPTY;
+	new_pos->type = PLAYER;
 	game->player.tile = new_pos;
 	new_pos->image = game->images.player;
 	old_pos->image = game->images.background;
@@ -26,6 +29,8 @@ void	player_move(t_game *game, t_tile *old_pos, t_tile *new_pos)
 	((old_pos->x_grid) * TILE_WIDTH), ((old_pos->y_grid) * TILE_HEIGHT));
 	mlx_put_image_to_window(game->mlx_ptr, game->window, game->images.player, \
 	((new_pos->x_grid) * TILE_WIDTH), ((new_pos->y_grid) * TILE_HEIGHT));
+	game->player.movements++;
+	ft_printf("Current number of movements is %i\n", game->player.movements);
 }
 
 int	key_press(int key, t_game *game)
@@ -33,8 +38,8 @@ int	key_press(int key, t_game *game)
 	t_tile	*player_tile;
 
 	if (!game)
-		close_game("Error on key_press call", NULL, CLOSE_FAILURE);
-	player_tile = NULL;
+		close_game("Error on key_press call", NULL, CLOSE_OTHERS);
+	player_tile = NULL; //Is this really necessary?
 	player_tile = game->player.tile;
 	if (key == ESC)
 		close_game(NULL, game, CLOSE_SUCCESS);
@@ -106,10 +111,10 @@ int	key_press(int key, t_game *game)
 // 	printf("\n\n");
 //     printf("Game mlx_ptr is %p\n", game->mlx_ptr);
 //     printf("Game window is %p\n", game->window);
-//     printf("Game tile_width is %d\n", game->tile_width);
-//     printf("Game tile_height is %d\n", game->tile_height);
-//     printf("Game pixel_width is %d\n", game->pixel_width);
-//     printf("Game pixel_height is %d\n", game->pixel_height);
+//     printf("Game horizontal_tiles is %d\n", game->horizontal_tiles);
+//     printf("Game vertical_tiles is %d\n", game->vertical_tiles);
+//     printf("Game total_pixel_width is %d\n", game->total_pixel_width);
+//     printf("Game total_pixel_height is %d\n", game->total_pixel_height);
 //     printf("Game grid pointer is %p\n", game->grid);
 
 //     // Print Player attributes
