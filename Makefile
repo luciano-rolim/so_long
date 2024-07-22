@@ -6,7 +6,7 @@
 #    By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/10 12:12:03 by lmeneghe          #+#    #+#              #
-#    Updated: 2024/07/22 14:02:16 by lmeneghe         ###   ########.fr        #
+#    Updated: 2024/07/22 16:28:03 by lmeneghe         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ MLX_DIR				= ./libs/mlx_linux/
 
 # Compiler and Flags
 CC              = gcc
-CFLAGS          = -Wall -Wextra -Werror 
+CFLAGS          = #-Wall -Wextra -Werror 
 
 #REMEMBER TO PUT THE FLAGS BACK LATER
 

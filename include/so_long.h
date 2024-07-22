@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:15:37 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 15:34:23 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/22 16:55:13 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ typedef struct s_game
 {
 	void			*mlx_ptr;
 	void			*window;
+	int				key_states[256];
 	t_map			map;
 	t_images		images;
 	t_player		player;
@@ -142,6 +143,7 @@ void	tile_completion(t_game *game);
 
 //Images functiosn
 void	start_images(t_game *game);
+void	fill_screen(t_game *game);
 
 //Node functions
 void	add_new_node(t_game *game, char *content);
@@ -149,5 +151,6 @@ t_line *last_node(t_game *game, t_line *head_node);
 
 //Generic utils
 void	put_image(t_game *game, void *image, int x, int y);
+void	search_valid_path(t_game *game, t_tile *current_tile);
 
 #endif

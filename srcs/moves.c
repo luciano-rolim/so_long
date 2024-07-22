@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 13:58:24 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 14:35:29 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/22 16:55:22 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,21 @@ static void	player_move(t_game *game, t_tile *old_pos, t_tile *new_pos)
 		standard_movement(game, old_pos, new_pos);
 	else
 		close_game("Error\nInvalid tile type\n", game, CLOSE_OTHERS);
+}
+
+void update_game_state(t_game *game) {
+    t_tile *player_tile = game->player.tile;
+    
+    if (game->key_states[ESC])
+        close_game(NULL, game, CLOSE_SUCCESS);
+    if (game->key_states[RIGHT_KEY])
+        player_move(game, player_tile, player_tile->right_tile);
+    if (game->key_states[LEFT_KEY])
+        player_move(game, player_tile, player_tile->left_tile);
+    if (game->key_states[UP_KEY])
+        player_move(game, player_tile, player_tile->up_tile);
+    if (game->key_states[DOWN_KEY])
+        player_move(game, player_tile, player_tile->down_tile);
 }
 
 int	key_press(int key, t_game *game)

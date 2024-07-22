@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 10:52:22 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 15:58:42 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/22 16:37:57 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,3 +47,35 @@ void	start_images(t_game *game)
 	if (!xpm_conversion(&game->images.exit_and_player, "assets/exit_and_player.xpm", game))
 		close_game("Error\nError initializing image", game, CLOSE_FAILURE);
 }
+
+static void	put_tiles_on_screen(t_game *game, int y)
+{
+	t_tile	*tmp_tile;
+	int		x;
+
+	if (!game)
+		close_game("Error\nError on put_tiles_on_screen call", NULL, CLOSE_OTHERS);
+	tmp_tile = NULL;
+	x = 0;
+	while (x < game->map.horizontal_tiles)
+	{
+		tmp_tile = game->map.grid[y][x];
+		put_image(game, tmp_tile->image, tmp_tile->x_grid, tmp_tile->y_grid);
+		x++;
+	}
+}
+
+void	fill_screen(t_game *game)
+{
+	int y;
+
+	if (!game)
+		close_game("Error\nInvalid fill_screen function call", NULL, CLOSE_OTHERS);
+	game->window = mlx_new_window(game->mlx_ptr, game->map.total_pixel_width, game->map.total_pixel_height, "Custom Pac-Man");
+	if (!game->window)
+		close_game("Error\nError initializing game window", game, CLOSE_FAILURE);
+	y = -1;
+	while (++y < game->map.vertical_tiles)
+		put_tiles_on_screen(game, y);
+}
+
