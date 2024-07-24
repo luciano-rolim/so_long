@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 10:52:22 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 16:37:57 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/24 12:36:34 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,17 @@ void	start_images(t_game *game)
 	if (!game)
 		close_game("Error\nError on start_images call", NULL, CLOSE_OTHERS);
 	message = "Error initializing image";
-	if (!xpm_conversion(&game->images.player, "assets/left_1.xpm", game))
+	if (!xpm_conversion(&game->images.player, "textures/left_1.xpm", game))
 		close_game(message, game, CLOSE_FAILURE);
-	if (!xpm_conversion(&game->images.background, "assets/background.xpm", game))
+	if (!xpm_conversion(&game->images.background, "textures/background.xpm", game))
 		close_game("Error\nError initializing image", game, CLOSE_FAILURE);
-	if (!xpm_conversion(&game->images.wall, "assets/wall.xpm", game))
+	if (!xpm_conversion(&game->images.wall, "textures/wall.xpm", game))
 		close_game("Error\nError initializing image", game, CLOSE_FAILURE);
-	if (!xpm_conversion(&game->images.exit, "assets/exit.xpm", game))
+	if (!xpm_conversion(&game->images.exit, "textures/exit.xpm", game))
 		close_game("Error\nError initializing image", game, CLOSE_FAILURE);
-	if (!xpm_conversion(&game->images.collectible, "assets/collectible.xpm", game))
+	if (!xpm_conversion(&game->images.collectible, "textures/collectible.xpm", game))
 		close_game("Error\nError initializing image", game, CLOSE_FAILURE);
-	if (!xpm_conversion(&game->images.exit_and_player, "assets/exit_and_player.xpm", game))
+	if (!xpm_conversion(&game->images.exit_and_player, "textures/exit_and_player.xpm", game))
 		close_game("Error\nError initializing image", game, CLOSE_FAILURE);
 }
 
@@ -67,10 +67,19 @@ static void	put_tiles_on_screen(t_game *game, int y)
 
 void	fill_screen(t_game *game)
 {
-	int y;
+	int		screen_width;
+	int		screen_height;
+	int		max_width;
+	int		max_height;
+	int		y;
 
 	if (!game)
 		close_game("Error\nInvalid fill_screen function call", NULL, CLOSE_OTHERS);
+	max_width = (game->map.total_pixel_width + 96);
+	max_height = (game->map.total_pixel_height + 96);
+	mlx_get_screen_size(game->mlx_ptr, &screen_width, &screen_height);
+	if (max_width > screen_width || max_height > screen_height)
+		close_game("Error\nGame map is too big for current screen size", game, CLOSE_OTHERS);
 	game->window = mlx_new_window(game->mlx_ptr, game->map.total_pixel_width, game->map.total_pixel_height, "Custom Pac-Man");
 	if (!game->window)
 		close_game("Error\nError initializing game window", game, CLOSE_FAILURE);
@@ -78,4 +87,3 @@ void	fill_screen(t_game *game)
 	while (++y < game->map.vertical_tiles)
 		put_tiles_on_screen(game, y);
 }
-

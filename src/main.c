@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:13:27 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 16:55:54 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/23 23:32:21 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ int	main(int argc, char **argv)
 	start_images(&game);
 	grid_creation(&game);
 	fill_screen(&game);
-	mlx_key_hook(game.window, key_press, &game);
+	mlx_key_hook(game.window, key_press_handler, &game);
+	mlx_hook(game.window, 17, 0, mouse_close_handler, &game);
 	mlx_loop(game.mlx_ptr);
 	close_game(NULL, &game, CLOSE_SUCCESS);
 }

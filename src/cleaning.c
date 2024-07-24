@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 10:25:44 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 14:39:57 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/23 23:29:44 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,11 @@ static void	clean_lines(t_game *game)
 int	exit_program(char *message, t_close_status status)
 {
 	if (status == CLOSE_SUCCESS)
+	{
+		if (message)
+			ft_printf("%s\n", message);
 		exit(EXIT_SUCCESS);
+	}
 	else
 	{
 		if (message)

@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 13:58:24 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 16:55:22 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/23 22:50:51 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	standard_movement(t_game *game, t_tile *old_pos, t_tile *new_pos)
 	make_move(game, old_pos, new_pos);
 }
 
-static void	player_move(t_game *game, t_tile *old_pos, t_tile *new_pos)
+void	player_move(t_game *game, t_tile *old_pos, t_tile *new_pos)
 {
 	if (!game || !old_pos || !new_pos)
 		close_game("Error\nError on player_move call", game, CLOSE_FAILURE);
@@ -79,39 +79,3 @@ static void	player_move(t_game *game, t_tile *old_pos, t_tile *new_pos)
 		close_game("Error\nInvalid tile type\n", game, CLOSE_OTHERS);
 }
 
-void update_game_state(t_game *game) {
-    t_tile *player_tile = game->player.tile;
-    
-    if (game->key_states[ESC])
-        close_game(NULL, game, CLOSE_SUCCESS);
-    if (game->key_states[RIGHT_KEY])
-        player_move(game, player_tile, player_tile->right_tile);
-    if (game->key_states[LEFT_KEY])
-        player_move(game, player_tile, player_tile->left_tile);
-    if (game->key_states[UP_KEY])
-        player_move(game, player_tile, player_tile->up_tile);
-    if (game->key_states[DOWN_KEY])
-        player_move(game, player_tile, player_tile->down_tile);
-}
-
-int	key_press(int key, t_game *game)
-{
-	t_tile	*player_tile;
-
-	if (!game)
-		close_game("Error\nError on key_press call", NULL, CLOSE_OTHERS);
-	player_tile = game->player.tile;
-	if (key == ESC)
-		close_game(NULL, game, CLOSE_SUCCESS);
-	else if (key == RIGHT_KEY)
-		player_move(game, player_tile, player_tile->right_tile);
-	else if (key == LEFT_KEY)
-		player_move(game, player_tile, player_tile->left_tile);
-	else if (key == UP_KEY)
-		player_move(game, player_tile, player_tile->up_tile);
-	else if (key == DOWN_KEY)
-		player_move(game, player_tile, player_tile->down_tile);
-	else
-		return (0);
-	return (1);
-}

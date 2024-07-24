@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 10:49:21 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 16:35:04 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/23 23:33:55 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,23 +45,6 @@ static void	tile_coordinates(t_game *game, t_tile *tile, int x, int y)
 		tile->up_tile = game->map.grid[y - 1][x];
 	if (y < (game->map.vertical_tiles - 1))
 		tile->down_tile = game->map.grid[y + 1][x];	
-}
-
-static void	put_tiles_on_screen(t_game *game, int y)
-{
-	t_tile	*tmp_tile;
-	int		x;
-
-	if (!game)
-		close_game("Error\nError on put_tiles_on_screen call", NULL, CLOSE_OTHERS);
-	tmp_tile = NULL;
-	x = 0;
-	while (x < game->map.horizontal_tiles)
-	{
-		tmp_tile = game->map.grid[y][x];
-		put_image(game, tmp_tile->image, tmp_tile->x_grid, tmp_tile->y_grid);
-		x++;
-	}
 }
 
 static void	fill_tiles_information(t_game *game, t_line *tmp_line, int y)

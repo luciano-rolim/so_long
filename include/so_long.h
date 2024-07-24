@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:15:37 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 16:55:13 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/24 10:38:15 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ typedef struct s_game
 //General functions
 void	close_game(char *message, t_game *game, t_close_status status);
 int		exit_program(char *message, t_close_status status);
-int		key_press(int key, t_game *game);
+void	player_move(t_game *game, t_tile *old_pos, t_tile *new_pos);
 
 //Map functions
 void	build_map(t_game *game, char *filename);
@@ -152,5 +152,9 @@ t_line *last_node(t_game *game, t_line *head_node);
 //Generic utils
 void	put_image(t_game *game, void *image, int x, int y);
 void	search_valid_path(t_game *game, t_tile *current_tile);
+
+//Handler functions
+int		key_press_handler(int key, t_game *game);
+int		mouse_close_handler(t_game *game);
 
 #endif
