@@ -6,7 +6,7 @@
 #    By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/10 12:12:03 by lmeneghe          #+#    #+#              #
-#    Updated: 2024/07/24 21:04:34 by lmeneghe         ###   ########.fr        #
+#    Updated: 2024/07/25 09:02:01 by lmeneghe         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,6 @@ SRC_FILES       =	src/main.c src/moves.c src/cleaning.c src/build_map.c src/buil
 OBJS_DIR        = obj/
 OBJS            = $(SRC_FILES:src/%.c=$(OBJS_DIR)%.o)
 
-Tapa buraco colchão
 $(MLX_DIR):
 				git clone https://github.com/42Paris/minilibx-linux $(MLX_DIR)
 				$(MAKE) -C $(MLX_DIR)
