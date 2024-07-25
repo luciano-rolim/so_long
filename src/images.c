@@ -6,13 +6,13 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 10:52:22 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/24 12:36:34 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/25 10:19:12 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-static int	xpm_conversion(void **image, char* address, t_game *game)
+static void	xpm_conversion(void **image, char* address, t_game *game)
 {
     int img_width;
     int img_height;
@@ -23,29 +23,17 @@ static int	xpm_conversion(void **image, char* address, t_game *game)
 	img_height = TILE_HEIGHT;
 	*image = mlx_xpm_file_to_image(game->mlx_ptr, address, &img_width, &img_height);
 	if (!image)
-		return (0);
-	return (1);
+		close_game("Error on xpm file conversion", game, CLOSE_FAILURE);
 }
 
 void	start_images(t_game *game)
 {
-	char* message;
-
-	if (!game)
-		close_game("Error\nError on start_images call", NULL, CLOSE_OTHERS);
-	message = "Error initializing image";
-	if (!xpm_conversion(&game->images.player, "textures/left_1.xpm", game))
-		close_game(message, game, CLOSE_FAILURE);
-	if (!xpm_conversion(&game->images.background, "textures/background.xpm", game))
-		close_game("Error\nError initializing image", game, CLOSE_FAILURE);
-	if (!xpm_conversion(&game->images.wall, "textures/wall.xpm", game))
-		close_game("Error\nError initializing image", game, CLOSE_FAILURE);
-	if (!xpm_conversion(&game->images.exit, "textures/exit.xpm", game))
-		close_game("Error\nError initializing image", game, CLOSE_FAILURE);
-	if (!xpm_conversion(&game->images.collectible, "textures/collectible.xpm", game))
-		close_game("Error\nError initializing image", game, CLOSE_FAILURE);
-	if (!xpm_conversion(&game->images.exit_and_player, "textures/exit_and_player.xpm", game))
-		close_game("Error\nError initializing image", game, CLOSE_FAILURE);
+	xpm_conversion(&game->images.player, "textures/player.xpm", game);
+	xpm_conversion(&game->images.background, "textures/background.xpm", game);
+	xpm_conversion(&game->images.wall, "textures/wall.xpm", game);
+	xpm_conversion(&game->images.exit, "textures/exit.xpm", game);
+	xpm_conversion(&game->images.collectible, "textures/collectible.xpm", game);
+	xpm_conversion(&game->images.exit_and_player, "textures/exit_and_player.xpm", game);
 }
 
 static void	put_tiles_on_screen(t_game *game, int y)

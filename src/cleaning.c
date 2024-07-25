@@ -6,28 +6,29 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 10:25:44 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/23 23:29:44 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/25 09:14:02 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
+static void	destroy_image(void *mlx_ptr, void *image)
+{
+	if (!mlx_ptr || !image)
+		return ;
+	mlx_destroy_image(mlx_ptr, image);
+}
+
 static void clean_images(t_game *game)
 {
 	if (!game)
 		return ;
-	if (game->images.player)
-		mlx_destroy_image(game->mlx_ptr, game->images.player);
-	if (game->images.background)
-		mlx_destroy_image(game->mlx_ptr, game->images.background);
-	if (game->images.wall)
-		mlx_destroy_image(game->mlx_ptr, game->images.wall);
-	if (game->images.exit)
-		mlx_destroy_image(game->mlx_ptr, game->images.exit);
-	if (game->images.exit_and_player)
-		mlx_destroy_image(game->mlx_ptr, game->images.exit_and_player);
-	if (game->images.collectible)
-		mlx_destroy_image(game->mlx_ptr, game->images.collectible);
+	mlx_destroy_image(game->mlx_ptr, game->images.player);
+	mlx_destroy_image(game->mlx_ptr, game->images.background);
+	mlx_destroy_image(game->mlx_ptr, game->images.wall);
+	mlx_destroy_image(game->mlx_ptr, game->images.exit);
+	mlx_destroy_image(game->mlx_ptr, game->images.exit_and_player);
+	mlx_destroy_image(game->mlx_ptr, game->images.collectible);
 }
 
 static void	ft_full_grid_clean(t_game *game)

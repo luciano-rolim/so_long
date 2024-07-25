@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 10:27:55 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 11:19:47 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/25 09:22:47 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ t_line *last_node(t_game *game, t_line *head_node)
 
 void add_new_node(t_game *game, char *content)
 {
-	//i need to build this function my way
 	t_line	*new_node;
 	t_line	*last_tile;
 
@@ -34,7 +33,7 @@ void add_new_node(t_game *game, char *content)
 		close_game("Error\nError on add_new_node call", game, CLOSE_OTHERS);
 	new_node = malloc(sizeof(t_line));
 	if (!new_node)
-		close_game("Error\nft_calloc failure on new node", game, CLOSE_FAILURE);
+		close_game("Error\nmalloc failure on new node", game, CLOSE_FAILURE);
 	new_node->content = content;
 	new_node->next_line = NULL;
 	if (!game->map.list)

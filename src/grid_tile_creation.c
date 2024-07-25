@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 10:49:21 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/23 23:33:55 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/25 09:26:49 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static void	tile_image_attribution(t_game *game, t_tile *tile)
 	{
 		tile->image = game->images.player;
 		game->player.tile = tile;
+		tile->type = EMPTY;
 	}
 	else if (tile->type == EMPTY)
 		tile->image = game->images.background;
