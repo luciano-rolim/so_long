@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 09:15:02 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/25 13:14:17 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/25 13:33:21 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ static void	line_check(t_game *game, int line_count, int line_len, int fd)
 		else
 			game->map.horiz_tiles = (line_len);
 	}
-	// if (!ft_is_string_char_set(last_row->content, "1"))
-	// 	line_err("Error\nLast row must be made only by walls", game, buffer, fd);
 	else
 	{
 		if (buffer[0] != '1' || buffer[line_len - 1] != '1')
@@ -78,6 +76,6 @@ void	build_map(t_game *game, char *filename)
 		end_game("Error\nOpen function failure", game, CLOSE_FAIL);
 	line_reading(game);
 	game->map.vertical_tiles = game->var.line_count;
-	additional_map_checks(game, game->var.buffer, game->var.fd);
+	extra_map_checks(game, game->var.buffer, game->var.fd);
 	clean_buffer_fd_gnl(game->var.buffer, game->var.fd, game);
 }

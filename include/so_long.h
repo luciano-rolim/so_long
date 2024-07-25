@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:15:37 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/25 11:49:50 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/25 13:46:29 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,13 @@ typedef struct s_var
 	int				line_count;
 	int				exit_found;
 	int				collects_found;
-} t_var;
+}	t_var;
 
 typedef struct s_line
 {
 	char			*content;
 	struct s_line	*next_line;
-} t_line;
+}	t_line;
 
 typedef struct s_tile
 {
@@ -138,8 +138,8 @@ void	player_move(t_game *game, t_tile *old_pos, t_tile *new_pos);
 //Map functions
 void	build_map(t_game *game, char *filename);
 void	line_err(char *message, t_game *game, char *buffer, int fd);
-void	additional_map_checks(t_game *game, char *buffer, int fd);
-void	clean_buffer_fd_gnl(char* buffer, int fd, t_game *game);
+void	extra_map_checks(t_game *game, char *buffer, int fd);
+void	clean_buffer_fd_gnl(char *buffer, int fd, t_game *game);
 
 //Grid and tiles creation
 void	grid_creation(t_game *game);
@@ -151,7 +151,7 @@ void	fill_screen(t_game *game);
 
 //Node functions
 void	add_new_node(t_game *game, char *content);
-t_line *last_node(t_game *game, t_line *head_node);
+t_line	*last_node(t_game *game, t_line *head_node);
 
 //Generic utils
 void	put_image(t_game *game, void *image, int x, int y);

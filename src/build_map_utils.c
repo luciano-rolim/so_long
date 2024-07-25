@@ -6,13 +6,13 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 10:23:28 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/25 13:21:39 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/25 13:33:21 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-void	clean_buffer_fd_gnl(char* buffer, int file_fd, t_game *game)
+void	clean_buffer_fd_gnl(char *buffer, int file_fd, t_game *game)
 {
 	if (!game || file_fd == -1)
 		end_game("Error\nInvalid clean_buffer_fd_gnl call", game, CLOSE_OTHER);
@@ -30,10 +30,10 @@ void	line_err(char *message, t_game *game, char *buffer, int fd)
 	end_game(message, game, CLOSE_OTHER);
 }
 
-static int item_count(t_game *game, char to_count)
+static int	item_count(t_game *game, char to_count)
 {
 	int		i;
-	int 	item_count;
+	int		item_count;
 	t_line	*tmp;
 
 	if (!game)
@@ -54,20 +54,20 @@ static int item_count(t_game *game, char to_count)
 	return (item_count);
 }
 
-void	additional_map_checks(t_game *game, char *buffer, int fd)
+void	extra_map_checks(t_game *game, char *buff, int fd)
 {
 	t_line	*last_row;
 
 	if (!game || fd == -1)
-		end_game("Error\nInvalid additional_map_checks call", game, CLOSE_OTHER);
+		end_game("Error\nInvalid extra_map_checks call", game, CLOSE_OTHER);
 	last_row = last_node(game, game->map.list);
 	if (!ft_is_string_char_set(last_row->content, "1"))
-		line_err("Error\nLast row must be made only by walls", game, buffer, fd);
+		line_err("Error\nLast row must be made only by walls", game, buff, fd);
 	if (item_count(game, 'P') != 1)
-		line_err("Error\nGame must have exactly one player", game, buffer, fd);
+		line_err("Error\nGame must have exactly one player", game, buff, fd);
 	if (item_count(game, 'E') != 1)
-		line_err("Error\nGame must have exactly one exit", game, buffer, fd);
+		line_err("Error\nGame must have exactly one exit", game, buff, fd);
 	game->map.collectibles = item_count(game, 'C');
 	if (game->map.collectibles < 1)
-		line_err("Error\nGame must have at least one collectible", game, buffer, fd);
+		line_err("Error\nMap dont have a collectible", game, buff, fd);
 }
