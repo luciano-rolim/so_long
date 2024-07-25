@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 14:50:11 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/22 09:13:28 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/25 13:27:33 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 # include <stddef.h>
 # include <stdlib.h>
+# include <stdio.h>
 # include <unistd.h>
 
 typedef struct node

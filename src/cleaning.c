@@ -6,43 +6,36 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 10:25:44 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/25 09:14:02 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/25 12:21:23 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-static void	destroy_image(void *mlx_ptr, void *image)
-{
-	if (!mlx_ptr || !image)
-		return ;
-	mlx_destroy_image(mlx_ptr, image);
-}
-
-static void clean_images(t_game *game)
+static void	clean_images(t_game *game)
 {
 	if (!game)
 		return ;
-	mlx_destroy_image(game->mlx_ptr, game->images.player);
-	mlx_destroy_image(game->mlx_ptr, game->images.background);
-	mlx_destroy_image(game->mlx_ptr, game->images.wall);
-	mlx_destroy_image(game->mlx_ptr, game->images.exit);
-	mlx_destroy_image(game->mlx_ptr, game->images.exit_and_player);
-	mlx_destroy_image(game->mlx_ptr, game->images.collectible);
+	destroy_image(game->mlx_ptr, game->images.player);
+	destroy_image(game->mlx_ptr, game->images.background);
+	destroy_image(game->mlx_ptr, game->images.wall);
+	destroy_image(game->mlx_ptr, game->images.exit);
+	destroy_image(game->mlx_ptr, game->images.exit_player);
+	destroy_image(game->mlx_ptr, game->images.collectible);
 }
 
 static void	ft_full_grid_clean(t_game *game)
 {
-	if(!game)
-		return ;
 	int	x;
 	int	y;
 
+	if (!game)
+		return ;
 	y = 0;
 	while (y < game->map.vertical_tiles)
 	{
 		x = 0;
-		while (x < game->map.horizontal_tiles)
+		while (x < game->map.horiz_tiles)
 		{
 			if (game->map.grid[y][x])
 				free(game->map.grid[y][x]);
@@ -84,16 +77,16 @@ int	exit_program(char *message, t_close_status status)
 	{
 		if (message)
 		{
-			if (status == CLOSE_FAILURE)
+			if (status == CLOSE_FAIL)
 				perror(message);
 			else
 				ft_printf("%s\n", message);
 		}
 		exit(EXIT_FAILURE);
-	};
+	}
 }
 
-void	close_game(char *message, t_game *game, t_close_status status)
+void	end_game(char *message, t_game *game, t_close_status status)
 {
 	if (game)
 	{

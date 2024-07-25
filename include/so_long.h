@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:15:37 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/24 10:38:15 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/25 11:49:50 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,27 +46,32 @@ typedef enum e_tile_type
 typedef enum e_key_code
 {
 	ESC = XK_Escape,
-	RIGHT_KEY = XK_Right,
-	LEFT_KEY = XK_Left,
-	UP_KEY = XK_Up,
-	DOWN_KEY = XK_Down
+	RIGHT_KEY = XK_d,
+	LEFT_KEY = XK_a,
+	UP_KEY = XK_w,
+	DOWN_KEY = XK_s,
+	EXTRA_RIGHT_KEY = XK_Right,
+	EXTRA_LEFT_KEY = XK_Left,
+	EXTRA_UP_KEY = XK_Up,
+	EXTRA_DOWN_KEY = XK_Down
 }	t_key_code;
 
 typedef enum e_close_status
 {
 	CLOSE_SUCCESS,
-	CLOSE_FAILURE,
-	CLOSE_OTHERS
+	CLOSE_FAIL,
+	CLOSE_OTHER
 }	t_close_status;
 
-typedef struct s_tmp_var
+typedef struct s_var
 {
 	char			*buffer;
-	int				file_fd;
+	char			*filename;
+	int				fd;
 	int				line_count;
 	int				exit_found;
-	int				collectables_found;
-} t_tmp_var;
+	int				collects_found;
+} t_var;
 
 typedef struct s_line
 {
@@ -100,12 +105,12 @@ typedef struct s_images
 	void	*wall;
 	void	*exit;
 	void	*collectible;
-	void	*exit_and_player;
+	void	*exit_player;
 }	t_images;
 
 typedef struct s_map
 {
-	int				horizontal_tiles;
+	int				horiz_tiles;
 	int				vertical_tiles;
 	int				total_pixel_width;
 	int				total_pixel_height;
@@ -117,25 +122,24 @@ typedef struct s_map
 
 typedef struct s_game
 {
-	void			*mlx_ptr;
-	void			*window;
-	int				key_states[256];
-	t_map			map;
-	t_images		images;
-	t_player		player;
-	t_tmp_var		tmp_var;
+	void		*mlx_ptr;
+	void		*window;
+	t_map		map;
+	t_images	images;
+	t_player	player;
+	t_var		var;
 }	t_game;
 
 //General functions
-void	close_game(char *message, t_game *game, t_close_status status);
+void	end_game(char *message, t_game *game, t_close_status status);
 int		exit_program(char *message, t_close_status status);
 void	player_move(t_game *game, t_tile *old_pos, t_tile *new_pos);
 
 //Map functions
 void	build_map(t_game *game, char *filename);
-void	handle_line_error(char *message, t_game *game, char *buffer, int file_fd);
-void	additional_map_checks(t_game *game, char *buffer, int file_fd);
-void	clean_buffer_fd_gnl(char* buffer, int file_fd, t_game *game);
+void	line_err(char *message, t_game *game, char *buffer, int fd);
+void	additional_map_checks(t_game *game, char *buffer, int fd);
+void	clean_buffer_fd_gnl(char* buffer, int fd, t_game *game);
 
 //Grid and tiles creation
 void	grid_creation(t_game *game);
@@ -152,6 +156,7 @@ t_line *last_node(t_game *game, t_line *head_node);
 //Generic utils
 void	put_image(t_game *game, void *image, int x, int y);
 void	search_valid_path(t_game *game, t_tile *current_tile);
+void	destroy_image(void *mlx_ptr, void *image);
 
 //Handler functions
 int		key_press_handler(int key, t_game *game);

@@ -6,7 +6,7 @@
 /*   By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 20:13:27 by lmeneghe          #+#    #+#             */
-/*   Updated: 2024/07/23 23:32:21 by lmeneghe         ###   ########.fr       */
+/*   Updated: 2024/07/25 12:47:27 by lmeneghe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 static void	start_graphics(t_game *game)
 {
 	if (!game)
-		close_game("Error\nError on start_graphics call", NULL, CLOSE_OTHERS);
+		end_game("Error\nError on start_graphics call", NULL, CLOSE_OTHER);
 	game->mlx_ptr = mlx_init();
 	if (!game->mlx_ptr)
-		close_game("Error\nError starting MLX connection", game, CLOSE_FAILURE);
-	game->map.total_pixel_width = (TILE_WIDTH * game->map.horizontal_tiles);
+		end_game("Error\nError starting MLX connection", game, CLOSE_FAIL);
+	game->map.total_pixel_width = (TILE_WIDTH * game->map.horiz_tiles);
 	game->map.total_pixel_height = (TILE_HEIGHT * game->map.vertical_tiles);
 }
 
@@ -32,15 +32,15 @@ static int	check_extension(char *filename)
 	extension = ft_strrchr(filename, '.');
 	if (!extension || ft_strlen(extension) != 4)
 		return (0);
-	if(ft_strncmp(extension, ".ber", 4))
+	if (ft_strncmp(extension, ".ber", 4))
 		return (0);
 	return (1);
 }
 
-static void structs_initialization(t_game *game)
+static void	structs_initialization(t_game *game)
 {
 	if (!game)
-		exit_program("Error\nInvalid structs_initialization call", CLOSE_OTHERS);
+		exit_program("Error\nInvalid structs_initialization call", CLOSE_OTHER);
 	game->mlx_ptr = NULL;
 	game->window = NULL;
 	game->player.tile = NULL;
@@ -50,16 +50,17 @@ static void structs_initialization(t_game *game)
 	game->images.wall = NULL;
 	game->images.exit = NULL;
 	game->images.collectible = NULL;
-	game->images.exit_and_player = NULL;
+	game->images.exit_player = NULL;
 	game->map.types = "01PEC";
 	game->map.grid = NULL;
 	game->map.list = NULL;
 	game->map.collectibles = 0;
-	game->tmp_var.buffer = NULL;
-	game->tmp_var.file_fd = -1;
-	game->tmp_var.line_count = 0;
-	game->tmp_var.exit_found = 0;
-	game->tmp_var.collectables_found = 0;
+	game->var.filename = NULL;
+	game->var.buffer = NULL;
+	game->var.fd = -1;
+	game->var.line_count = 0;
+	game->var.exit_found = 0;
+	game->var.collects_found = 0;
 }
 
 int	main(int argc, char **argv)
@@ -67,9 +68,9 @@ int	main(int argc, char **argv)
 	t_game	game;
 
 	if (argc != 2 || !argv || !argv[0] || !argv[1])
-		exit_program("Error\nInvalid game arguments", CLOSE_OTHERS);
+		exit_program("Error\nInvalid game arguments", CLOSE_OTHER);
 	if (!check_extension(argv[1]))
-		exit_program("Error\nMap file must be .ber type", CLOSE_OTHERS);
+		exit_program("Error\nMap file must be .ber type", CLOSE_OTHER);
 	structs_initialization(&game);
 	build_map(&game, argv[1]);
 	start_graphics(&game);
@@ -79,5 +80,5 @@ int	main(int argc, char **argv)
 	mlx_key_hook(game.window, key_press_handler, &game);
 	mlx_hook(game.window, 17, 0, mouse_close_handler, &game);
 	mlx_loop(game.mlx_ptr);
-	close_game(NULL, &game, CLOSE_SUCCESS);
+	end_game(NULL, &game, CLOSE_SUCCESS);
 }

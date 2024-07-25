@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+
 int	ft_is_string_char_set(char *full_str, char *char_set)
 {
 	int	i;
@@ -17,6 +19,8 @@ int	ft_is_string_char_set(char *full_str, char *char_set)
 	int	is_valid;
 
 	i = 0;
+	if (!full_str || !char_set)
+		return (0);
 	while (full_str[i])
 	{
 		j = 0;
