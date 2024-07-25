@@ -6,7 +6,7 @@
 #    By: lmeneghe <lmeneghe@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/10 12:12:03 by lmeneghe          #+#    #+#              #
-#    Updated: 2024/07/25 09:02:01 by lmeneghe         ###   ########.fr        #
+#    Updated: 2024/07/25 14:01:27 by lmeneghe         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,9 +21,7 @@ MLX_DIR				= ./libs/mlx_linux/
 
 # Compiler and Flags
 CC              = gcc
-CFLAGS          = #-Wall -Wextra -Werror 
-
-#REMEMBER TO PUT THE FLAGS BACK LATER
+CFLAGS          = -Wall -Wextra -Werror 
 
 # Library files
 LIBFT           = $(LIBFT_DIR)libft.a
